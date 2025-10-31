@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    {
+      "name": "Mac",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/include/**",
+        "${workspaceFolder}/lib/**",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/src/**"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "macos-clang-arm64"
+    }
+  ],
+  "version": 4
+}
