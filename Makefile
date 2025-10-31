@@ -11,6 +11,9 @@ TARGET = a.out
 SRC := $(shell find src -name "*.cpp") $(wildcard *.cpp)  # Find .cpp files in src and the root folder
 OBJ := $(SRC:.cpp=.o) src/glad.o  # Include glad.o explicitly
 
+# Shaders
+SHADERS = shaders/*
+
 # Default target
 $(TARGET): $(OBJ)
 	g++ $(OBJ) -o $(TARGET) $(LDFLAGS)
@@ -23,10 +26,14 @@ $(TARGET): $(OBJ)
 src/glad.o: src/glad.c
 	gcc -Wall -Wextra -Iinclude -Iinclude/glad -I. -c src/glad.c -o src/glad.o
 
-.PHONY: test clean
+copy-shaders:
+	mkdir -p build/shaders
+	cp -r shaders/* build/shaders/
+
+.PHONY: test clean copy-shaders
 
 # Test target (runs the program)
-test: $(TARGET)
+test: $(TARGET) copy-shaders
 	./$(TARGET)
 
 # Clean target (removes compiled files)

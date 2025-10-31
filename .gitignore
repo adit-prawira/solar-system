@@ -43,6 +43,7 @@
 include/glad
 include/KHR
 include/GLFW
+include/glm
 
 src/glad.c
 c_cpp_properties.json
