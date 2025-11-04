@@ -4,19 +4,21 @@
 namespace Engines::Graphics {
   class Sphere : public Shape {
     public:
-      explicit Sphere(float radius, unsigned int sector_count, unsigned int stack_count, bool is_debug);
+      explicit Sphere(
+        float radius, 
+        glm::vec3 color, 
+        glm::mat4 position,
+        unsigned int sector_count, 
+        unsigned int stack_count, 
+        std::shared_ptr<Engines::Graphics::Shader> shader,
+        bool is_debug
+      );
       ~Sphere() override;
       void draw() override;
     private:
-      GLuint VAO, VBO, EBO;
       float radius = 10.0f;
-      unsigned int sector_count = 36;
-      unsigned int stack_count = 18;
-      std::vector<Vertex> vertices;
-      std::vector<unsigned int> indices;
-
-      void processVertices();
-      void processIndices();
-      void setupMesh();
+      void processVertices() override;
+      void processIndices() override;
+      void setupMesh() override;
   };
 }

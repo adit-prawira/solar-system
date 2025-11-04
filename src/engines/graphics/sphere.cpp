@@ -3,12 +3,19 @@
 
 namespace Engines::Graphics {
   // Public
-  Sphere::Sphere(float radius, unsigned int sector_count, unsigned int stack_count, bool is_debug)
-    :radius(radius), sector_count(sector_count), stack_count(stack_count){
+  Sphere::Sphere(
+        float radius, 
+        glm::vec3 color, 
+        glm::mat4 position,
+        unsigned int sector_count, 
+        unsigned int stack_count, 
+        std::shared_ptr<Engines::Graphics::Shader> shader,
+        bool is_debug):
+        Shape(color, position, sector_count, stack_count, shader, is_debug),
+        radius(radius){
     this->processVertices();
     this->processIndices();
     this->setupMesh();
-    this->is_debug = is_debug;
   }
 
   Sphere::~Sphere(){
@@ -18,6 +25,9 @@ namespace Engines::Graphics {
   }
 
   void Sphere::draw() {
+    this->shader->setMat4("model", this->position);
+    this->shader->setVec3("object_color", this->color);
+
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(this->indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

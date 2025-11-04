@@ -5,6 +5,17 @@ namespace Engines::Graphics {
   auto GeometryBuilder::createCube() -> GeometryBuilder{return {Type::Cube};}
   auto GeometryBuilder::createSphere() -> GeometryBuilder {return {Type::Sphere};}
   
+  GeometryBuilder& GeometryBuilder::setShader(std::shared_ptr<Engines::Graphics::Shader> shader){
+    this->shader = shader;
+    return *this;
+  }
+
+  GeometryBuilder& GeometryBuilder::setPosition(glm::mat4 position){
+    this->position = position;
+    return *this;
+  }
+  
+  
   GeometryBuilder& GeometryBuilder::setRadius(float radius){
     this->radius = radius;
     return *this;
@@ -36,11 +47,16 @@ namespace Engines::Graphics {
   }
 
   std::unique_ptr<Shape> GeometryBuilder::build() const {
+    if(this->shader == nullptr) 
+      throw std::runtime_error("GeometryBuilder_ERROR ==> Shader is required to render shape");
+
     switch(type){
       case Type::Sphere:
-        return std::make_unique<Sphere>(this->radius, this->sector_count, this->stack_count, this->is_debug);
+        return std::make_unique<Sphere>(this->radius, this->color, this->position, 
+          this->sector_count, this->stack_count, this->shader, this->is_debug);
       case Type::Cube:
-        return std::make_unique<Cube>(this->size);
+        return std::make_unique<Cube>(this->size, this->color, this->position, 
+          this->sector_count, this->stack_count, this->shader, this->is_debug);
       default:
         return nullptr;
     }
