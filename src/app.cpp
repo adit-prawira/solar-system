@@ -32,8 +32,13 @@ namespace Application {
     glEnable(GL_DEPTH_TEST);
 
     // Shader
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.1f, 100.0f);
     auto shader = std::make_shared<Engines::Graphics::Shader>("shaders/vertex.glsl", "shaders/fragment.glsl");
-
+    this->camera = std::make_unique<Engines::Graphics::Camera>();
+    this->camera->setShader(shader)
+      .setSpeed(1.0f)
+      .build();
+      
     glm::mat4 sphere_model_postion = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     auto sphere = Engines::Graphics::GeometryBuilder::createSphere()
             .setRadius(10.0f) 
@@ -46,7 +51,7 @@ namespace Application {
 
     glm::mat4 alpha_model_position = glm::translate(glm::mat4(1.0f), glm::vec3(30.0f, 0.0f, 0.0f));
     auto alpha = Engines::Graphics::GeometryBuilder::createSphere()
-            .setRadius(5.0f) 
+            .setRadius(2.0f) 
             .setSectorCount(30)
             .setStackCount(18)
             .setPosition(alpha_model_position)
@@ -63,14 +68,10 @@ namespace Application {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       shader->use();
-      glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.1f, 100.0f);
-      glm::mat4 view = glm::lookAt(this->camera_position, this->camera_position + this->camera_front, glm::vec3(0, 1, 0));
-
-      shader->setMat4("view", view);
       shader->setMat4("projection", projection);
       shader->setVec3("light_position", this->light_position);
-      shader->setVec3("view_position", this->camera_position);
       shader->setVec3("light_color", glm::vec3(1.0f));
+      this->camera->stream();
 
       sphere->draw();
       alpha->draw();
@@ -86,40 +87,27 @@ namespace Application {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    glm::vec3 forward = glm::normalize(glm::vec3(sin(glm::radians(camera_angle)), 0.0f, -cos(glm::radians(camera_angle))));
-    glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0f, 1.0f, 0.0f)));
-    
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-      this->camera_position.x -= this->camera_speed;
+      this->camera->left();
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-      this->camera_position.x += this->camera_speed;
+      this->camera->right();
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-      this->camera_position.y += this->camera_speed;
+      this->camera->up();
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-      this->camera_position.y -= this->camera_speed;
+      this->camera->down();
 
     if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-      this->camera_position.z -= this->camera_speed;
+      this->camera->zoomIn();
     if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-      this->camera_position.z += this->camera_speed;
+      this->camera->zoomOut();
 
-    // --- Rotate camera with arrow keys ---
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        this->camera_angle -= 1.0f;
+        this->camera->rotateClockwise();
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        this->camera_angle += 1.0f;
+        this->camera->rotateAntiClockwise();
     
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
-      this->camera_position = this->initial_camera_position;
-      this->camera_front = this->initial_camera_front;
-      this->camera_angle = this->initial_camera_angle;
-    }
-
-    // --- Compute direction the camera is facing based on angle ---
-    float angle_rad = glm::radians(this->camera_angle);
-    this->camera_front = glm::normalize(glm::vec3(
-        sin(angle_rad), 0.0f, -cos(angle_rad)
-    ));
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+      this->camera->reset();
   }
 
   void App::framebufferSizeCallback(GLFWwindow *window, int width, int height){
