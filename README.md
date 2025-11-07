@@ -1,4 +1,4 @@
-# Black hole simulation
+# Solar System Simulation
 
 This is a solar system simulation written in C++ OpenGL.
 
