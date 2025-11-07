@@ -23,7 +23,7 @@ namespace Application {
 
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-    
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
       std::cout << "Failed to initialize GLAD" << std::endl;
@@ -38,7 +38,12 @@ namespace Application {
     this->camera->setShader(shader)
       .setSpeed(1.0f)
       .build();
-      
+
+    glfwSetWindowUserPointer(window, this->camera.get());
+    glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+    glfwSetScrollCallback(window, scrollCallback); // if you use scroll to zoom
+
     glm::mat4 sphere_model_postion = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     auto sphere = Engines::Graphics::GeometryBuilder::createSphere()
             .setRadius(10.0f) 
@@ -112,5 +117,53 @@ namespace Application {
 
   void App::framebufferSizeCallback(GLFWwindow *window, int width, int height){
     glViewport(0, 0, width, height);
+  }
+
+  void App::mouseCallback(GLFWwindow *window, double x_position, double y_position){
+    auto* camera = static_cast<Engines::Graphics::Camera*>(glfwGetWindowUserPointer(window));
+    if(!camera) return;
+    
+    if(!Application::is_dragging && !Application::is_rotating){
+      Application::last_x = x_position;
+      Application::last_y = y_position;
+      return;
+    }
+    float x_offset = static_cast<float>(x_position - Application::last_x);
+    float y_offset = static_cast<float>(Application::last_y - y_position);
+    Application::last_x = x_position;
+    Application::last_y = y_position;
+
+    if(Application::is_rotating) camera->processMouseRotate(x_offset, y_offset, true);
+    if(Application::is_dragging) camera->processMouseMove(x_offset, y_offset);
+  }
+  
+  void App::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods){
+    if(button == GLFW_MOUSE_BUTTON_RIGHT) handleRightClick(window, action);
+    if(button == GLFW_MOUSE_BUTTON_LEFT) handleLeftClick(window, action);
+  }
+
+  void App::handleLeftClick(GLFWwindow *window, int action){
+    if(action != GLFW_PRESS){
+      Application::is_dragging = false;
+      return;
+    }
+    Application::is_dragging = true;
+    glfwGetCursorPos(window, &Application::last_x, &Application::last_y);
+    std::cout << "(x, y) = " << "(" << Application::last_x << ", " << Application::last_y << ")" << std::endl;
+  }
+
+  void App::handleRightClick(GLFWwindow *window, int action){
+    if(action != GLFW_PRESS){
+      Application::is_rotating = false;
+      return;
+    }
+    Application::is_rotating = true;
+    glfwGetCursorPos(window, &Application::last_x, &Application::last_y);
+    std::cout << "(x, y) = " << "(" << Application::last_x << ", " << Application::last_y << ")" << std::endl;
+  }
+
+  void App::scrollCallback(GLFWwindow *window, double x_offset, double y_offset){
+    auto* camera = static_cast<Engines::Graphics::Camera*>(glfwGetWindowUserPointer(window));
+    if(camera) camera->processMouseScroll(static_cast<float>(y_offset));
   }
 }
