@@ -45,8 +45,8 @@ namespace Engines::Graphics {
       glm::vec3 camera_front{0.0f, -0.5f, -1.0f};
       glm::vec3 initial_camera_front{0.0f, -0.5f, -1.0f};
 
-      glm::vec3 camera_position{0.0f, 70.0f, 170.0f};
-      glm::vec3 initial_camera_position{0.0f, 70.0f, 170.0f};
+      glm::vec3 camera_position{0.0f, 500.0f, 800.0f};
+      glm::vec3 initial_camera_position{0.0f, 500.0f, 470.0f};
 
       template<typename Func>
       void execute(Func &&f);

@@ -14,7 +14,7 @@ uniform vec3 object_color;
 void main() {
     // Ambient
     vec3 ambient = 0.2 * light_color;
-
+    vec3 emission = 1.0 * object_color; // tune multiplier
     // Diffuse
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(light_position - FragPos);
@@ -28,6 +28,6 @@ void main() {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specular_strength * spec * object_color;
 
-    vec3 result = (ambient + diffuse + specular) * object_color;
+    vec3 result = (ambient + diffuse + specular) * object_color + emission;
     FragColor = vec4(result, 1.0);
 }

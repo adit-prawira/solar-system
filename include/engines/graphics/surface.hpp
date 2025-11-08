@@ -16,6 +16,10 @@ namespace Engines::Graphics {
         bool is_debug);
       ~Surface() override;
       void draw() override;
+
+      float getSpace() const;
+      unsigned int getRows() const;
+      unsigned int getColumns() const;
     private:
       unsigned int rows = 10;
       unsigned int columns = 10;

@@ -23,7 +23,11 @@ namespace Engines::Graphics {
 
       virtual ~Shape() = default;
       virtual void draw() = 0;
+      
+      std::vector<Vertex>& getVertices();
+      std::vector<unsigned int>& getIndices();
 
+      void updateVertices();
     protected:
       GLuint VAO, VBO, EBO;
 

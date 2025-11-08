@@ -19,6 +19,8 @@ namespace Engines::Graphics {
             this->processIndices();
             this->setupMesh();
           }
+  
+  
   // Clean up
   Surface::~Surface(){
     glDeleteVertexArrays(1, &this->VAO);
@@ -26,6 +28,10 @@ namespace Engines::Graphics {
     glDeleteBuffers(1, &this->EBO);
   }
 
+  auto Surface::getSpace() const -> float {return space;}
+  auto Surface::getRows() const -> unsigned int {return rows;}
+  auto Surface::getColumns() const -> unsigned int {return columns;}
+  
   void Surface::draw(){
     // call shader
     this->shader->setMat4("model", this->position);
@@ -80,7 +86,7 @@ namespace Engines::Graphics {
     glBindVertexArray(this->VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-    glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), this->vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), this->vertices.data(), GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);

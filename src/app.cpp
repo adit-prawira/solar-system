@@ -4,6 +4,12 @@ namespace Application {
   App::App(const std::string name):name(name){}
 
   void App::run(){
+
+    std::string input_flamm_paraboloid;
+    std::cout << "Render Flamm Paraboloid (y/n) => ";
+    std::cin >> input_flamm_paraboloid;
+    bool show_flamm_paraboloid = input_flamm_paraboloid=="y";
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -13,7 +19,7 @@ namespace Application {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     #endif
 
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, this->name.c_str(), NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(Config::SCR_WIDTH, Config::SCR_HEIGHT, this->name.c_str(), NULL, NULL);
     if (window == NULL)
     {
       std::cout << "Failed to create GLFW window" << std::endl;
@@ -32,11 +38,11 @@ namespace Application {
     glEnable(GL_DEPTH_TEST);
 
     // Shader
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.5f, 1000.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.5f, 10000.0f);
     auto shader = std::make_shared<Engines::Graphics::Shader>("shaders/vertex.glsl", "shaders/fragment.glsl");
     this->camera = std::make_unique<Engines::Graphics::Camera>();
     this->camera->setShader(shader)
-      .setSpeed(1.0f)
+      .setSpeed(15.0f)
       .build();
 
     glfwSetWindowUserPointer(window, this->camera.get());
@@ -44,36 +50,91 @@ namespace Application {
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetScrollCallback(window, scrollCallback); // if you use scroll to zoom
 
-    glm::mat4 sun_position = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 20.0f, 0.0f));
-    auto sun = Engines::Graphics::GeometryBuilder::createSphere()
-            .setRadius(15.0f) 
-            .setSectorCount(30)
-            .setStackCount(18)
-            .setPosition(sun_position)
-            .setColor(glm::vec3(1.0f, 1.0f, .3f))
-            .setShader(shader)
-            .build();
+    const float distance_magnification = 100.0f, surface_size = 200;    
+    const float distance_sun_to_mercury = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_MERCURY_M,surface_size,distance_magnification),
+      distance_sun_to_venus = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_VENUS_M,surface_size,distance_magnification),
+      distance_sun_to_earth = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_EARTH_M,surface_size,distance_magnification),
+      distance_sun_to_mars = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_MARS_M,surface_size,distance_magnification),
+      distance_sun_to_jupiter = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_JUPITER_M,surface_size,distance_magnification/2),
+      distance_sun_to_saturn = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_SATURN_M,surface_size,distance_magnification/3),
+      distance_sun_to_uranus = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_URANUS_M,surface_size,distance_magnification/5),
+      distance_sun_to_neptune = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_NEPTUNE_M,surface_size,distance_magnification/7),
+      distance_sun_to_pluto = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_PLUTO_M,surface_size,distance_magnification/8);
 
-    glm::mat4 mercury_position = glm::translate(glm::mat4(1.0f), glm::vec3(30.0f, 20.0f, 0.0f));
-    auto mercury = Engines::Graphics::GeometryBuilder::createSphere()
-            .setRadius(2.0f) 
-            .setSectorCount(30)
-            .setStackCount(18)
-            .setPosition(mercury_position)
-            .setColor(glm::vec3(1.0f, 0.5f, 0.3f))
-            .setShader(shader)
-            .build();
-    
+    std::vector<std::shared_ptr<Simulation::CelestialBody>> celestial_bodies;
+    auto sun = Simulation::Sun()
+      .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
+      .setPosition(glm::vec3(0.0f, 50.0f, 0.0f))
+      .setMagnification(2.0f)
+      .build(shader),
+      mercury = Simulation::Mercury()
+      .setPosition(glm::vec3(distance_sun_to_mercury, 50.0f, 0.0f))
+      .setColor(glm::vec3(0.6f, 0.5f, 0.4f))
+      .setMagnification(10.0f)
+      .build(shader),
+      venus = Simulation::Venus()
+          .setPosition(glm::vec3(distance_sun_to_venus, 50.0f, 0.0f))
+          .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
+          .setMagnification(10.0f)
+          .build(shader),
+      earth = Simulation::Earth()
+          .setPosition(glm::vec3(distance_sun_to_earth, 50.0f, 0.0f))
+          .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
+          .setMagnification(10.0f)
+          .build(shader),
+      mars = Simulation::Earth()
+          .setPosition(glm::vec3(distance_sun_to_mars, 50.0f, 0.0f))
+          .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
+          .setMagnification(10.0f)
+          .build(shader),
+      jupiter = Simulation::Jupiter()
+          .setPosition(glm::vec3(distance_sun_to_jupiter, 50.0f, 0.0f))
+          .setColor(glm::vec3(0.9f, 0.7f, 0.5f))
+          .setMagnification(5.0f)
+          .build(shader),
+      saturn = Simulation::Saturn()
+          .setPosition(glm::vec3(distance_sun_to_saturn, 50.0f, 0.0f))
+          .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
+          .setMagnification(5.0f)
+          .build(shader),
+      uranus = Simulation::Uranus()
+          .setPosition(glm::vec3(distance_sun_to_uranus, 50.0f, 0.0f))
+          .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
+          .setMagnification(7.0f)
+          .build(shader),
+      neptune = Simulation::Neptune()
+          .setPosition(glm::vec3(distance_sun_to_neptune, 50.0f, 0.0f))
+          .setColor(glm::vec3(0.3f, 0.3f, 1.0f))
+          .setMagnification(7.0f)
+          .build(shader),
+      pluto = Simulation::Pluto()
+          .setPosition(glm::vec3(distance_sun_to_pluto, 50.0f, 0.0f))
+          .setColor(glm::vec3(0.8f, 0.7f, 0.6f))
+          .setMagnification(20.0f)
+          .build(shader);
+
+    celestial_bodies.insert(celestial_bodies.end(), {
+      sun, mercury, venus,
+      earth, mars, jupiter,
+      saturn, uranus, neptune,
+      pluto
+    });
+
     glm::mat4 surface_position = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    auto surface = Engines::Graphics::GeometryBuilder::createSurfaceGrid()
-      .setRows(20)
-      .setColumns(20)
-      .setSpace(10.0f)
+    auto surface_shape = Engines::Graphics::GeometryBuilder::createSurfaceGrid()
+      .setRows(static_cast<int>(surface_size))
+      .setColumns(static_cast<int>(surface_size))
+      .setSpace(20.0f)
       .setPosition(surface_position)
-      .setColor(glm::vec3(1.0f, 1.0f, 1.0f))
+      .setColor(glm::vec3(0.2f, 0.2f, 0.2f))
       .setShader(shader)
       .build();
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    Engines::Graphics::Surface* raw = dynamic_cast<Engines::Graphics::Surface*>(surface_shape.get());
+    if (!raw) throw std::runtime_error("Builder did not return a Surface");
+    std::unique_ptr<Engines::Graphics::Surface> raw_surface_shape(static_cast<Engines::Graphics::Surface*>(surface_shape.release()));
+    Simulation::FlammParaboloid surface;
+    surface.setSurface(std::move(raw_surface_shape))
+      .build();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -87,9 +148,15 @@ namespace Application {
       shader->setVec3("light_color", glm::vec3(1.0f));
       this->camera->stream();
 
-      surface->draw();
-      sun->draw();
-      mercury->draw();
+      if(show_flamm_paraboloid){
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        surface.apply(celestial_bodies);
+        surface.getSurface()->draw();
+      }
+  
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      for(auto &celestial_body : celestial_bodies)
+        celestial_body->getShape()->draw();
 
       glfwSwapBuffers(window);
       glfwPollEvents();
@@ -159,7 +226,6 @@ namespace Application {
     }
     Application::is_dragging = true;
     glfwGetCursorPos(window, &Application::last_x, &Application::last_y);
-    std::cout << "(x, y) = " << "(" << Application::last_x << ", " << Application::last_y << ")" << std::endl;
   }
 
   void App::handleRightClick(GLFWwindow *window, int action){
@@ -169,7 +235,6 @@ namespace Application {
     }
     Application::is_rotating = true;
     glfwGetCursorPos(window, &Application::last_x, &Application::last_y);
-    std::cout << "(x, y) = " << "(" << Application::last_x << ", " << Application::last_y << ")" << std::endl;
   }
 
   void App::scrollCallback(GLFWwindow *window, [[maybe_unused]]double x_offset, double y_offset){

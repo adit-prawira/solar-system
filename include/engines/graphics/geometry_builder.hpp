@@ -1,3 +1,4 @@
+#pragma once
 #include <memory>
 #include <engines/graphics/shape.hpp>
 #include <engines/graphics/cube.hpp>

@@ -16,6 +16,15 @@ namespace Engines::Graphics{
           this->is_debug = is_debug;
           this->shader = shader;
         };
+  
+  auto Shape::getVertices() -> std::vector<Vertex>&{ return vertices;}
+  auto Shape::getIndices() -> std::vector<unsigned int>&{ return indices;}
+  
+  void Shape::updateVertices(){
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, this->vertices.size() * sizeof(Vertex), this->vertices.data());
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
 
   void Shape::logVertices(){
     for(auto vertex:vertices){
