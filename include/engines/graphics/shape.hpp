@@ -19,15 +19,7 @@ namespace Engines::Graphics {
         unsigned int sector_count, 
         unsigned int stack_count, 
         std::shared_ptr<Engines::Graphics::Shader> shader,
-        bool is_debug)
-        {
-          this->color = color;
-          this->position = position;
-          this->sector_count = sector_count;
-          this->stack_count = stack_count;
-          this->is_debug = is_debug;
-          this->shader = shader;
-        }
+        bool is_debug);
 
       virtual ~Shape() = default;
       virtual void draw() = 0;
@@ -44,8 +36,10 @@ namespace Engines::Graphics {
       std::vector<Vertex> vertices;
       std::vector<unsigned int> indices;
 
-      virtual void processVertices(){};
-      virtual void processIndices(){};
-      virtual void setupMesh(){};
+      virtual void processVertices() = 0;
+      virtual void processIndices() = 0;
+      virtual void setupMesh() = 0;
+
+      void logVertices();
   };
 }

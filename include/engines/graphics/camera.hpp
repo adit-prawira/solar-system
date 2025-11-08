@@ -42,11 +42,11 @@ namespace Engines::Graphics {
       float initial_camera_angle = 0.0f; // current horizontal rotation angle
 
       std::shared_ptr<Engines::Graphics::Shader> shader = nullptr;
-      glm::vec3 camera_front{0.0f, 0.0f, -1.0f};
-      glm::vec3 initial_camera_front{0.0f, 0.0f, -1.0f};
+      glm::vec3 camera_front{0.0f, -0.5f, -1.0f};
+      glm::vec3 initial_camera_front{0.0f, -0.5f, -1.0f};
 
-      glm::vec3 camera_position{15.0f, 0.0f, 50.0f};
-      glm::vec3 initial_camera_position{15.0f, 0.0f, 50.0f};
+      glm::vec3 camera_position{0.0f, 70.0f, 170.0f};
+      glm::vec3 initial_camera_position{0.0f, 70.0f, 170.0f};
 
       template<typename Func>
       void execute(Func &&f);

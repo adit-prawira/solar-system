@@ -32,7 +32,7 @@ namespace Application {
     glEnable(GL_DEPTH_TEST);
 
     // Shader
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.5f, 1000.0f);
     auto shader = std::make_shared<Engines::Graphics::Shader>("shaders/vertex.glsl", "shaders/fragment.glsl");
     this->camera = std::make_unique<Engines::Graphics::Camera>();
     this->camera->setShader(shader)
@@ -44,26 +44,35 @@ namespace Application {
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetScrollCallback(window, scrollCallback); // if you use scroll to zoom
 
-    glm::mat4 sphere_model_postion = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    auto sphere = Engines::Graphics::GeometryBuilder::createSphere()
-            .setRadius(10.0f) 
+    glm::mat4 sun_position = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 20.0f, 0.0f));
+    auto sun = Engines::Graphics::GeometryBuilder::createSphere()
+            .setRadius(15.0f) 
             .setSectorCount(30)
             .setStackCount(18)
-            .setPosition(sphere_model_postion)
-            .setColor(glm::vec3(1.0f, 1.0f, 1.0f))
+            .setPosition(sun_position)
+            .setColor(glm::vec3(1.0f, 1.0f, .3f))
             .setShader(shader)
             .build();
 
-    glm::mat4 alpha_model_position = glm::translate(glm::mat4(1.0f), glm::vec3(30.0f, 0.0f, 0.0f));
-    auto alpha = Engines::Graphics::GeometryBuilder::createSphere()
+    glm::mat4 mercury_position = glm::translate(glm::mat4(1.0f), glm::vec3(30.0f, 20.0f, 0.0f));
+    auto mercury = Engines::Graphics::GeometryBuilder::createSphere()
             .setRadius(2.0f) 
             .setSectorCount(30)
             .setStackCount(18)
-            .setPosition(alpha_model_position)
+            .setPosition(mercury_position)
             .setColor(glm::vec3(1.0f, 0.5f, 0.3f))
             .setShader(shader)
             .build();
-            
+    
+    glm::mat4 surface_position = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    auto surface = Engines::Graphics::GeometryBuilder::createSurfaceGrid()
+      .setRows(20)
+      .setColumns(20)
+      .setSpace(10.0f)
+      .setPosition(surface_position)
+      .setColor(glm::vec3(1.0f, 1.0f, 1.0f))
+      .setShader(shader)
+      .build();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!glfwWindowShouldClose(window))
@@ -78,8 +87,9 @@ namespace Application {
       shader->setVec3("light_color", glm::vec3(1.0f));
       this->camera->stream();
 
-      sphere->draw();
-      alpha->draw();
+      surface->draw();
+      sun->draw();
+      mercury->draw();
 
       glfwSwapBuffers(window);
       glfwPollEvents();
@@ -115,7 +125,7 @@ namespace Application {
       this->camera->reset();
   }
 
-  void App::framebufferSizeCallback(GLFWwindow *window, int width, int height){
+  void App::framebufferSizeCallback([[maybe_unused]]GLFWwindow *window, int width, int height){
     glViewport(0, 0, width, height);
   }
 
@@ -137,7 +147,7 @@ namespace Application {
     if(Application::is_dragging) camera->processMouseMove(x_offset, y_offset);
   }
   
-  void App::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods){
+  void App::mouseButtonCallback(GLFWwindow *window, int button, int action, [[maybe_unused]]int mods){
     if(button == GLFW_MOUSE_BUTTON_RIGHT) handleRightClick(window, action);
     if(button == GLFW_MOUSE_BUTTON_LEFT) handleLeftClick(window, action);
   }
@@ -162,7 +172,7 @@ namespace Application {
     std::cout << "(x, y) = " << "(" << Application::last_x << ", " << Application::last_y << ")" << std::endl;
   }
 
-  void App::scrollCallback(GLFWwindow *window, double x_offset, double y_offset){
+  void App::scrollCallback(GLFWwindow *window, [[maybe_unused]]double x_offset, double y_offset){
     auto* camera = static_cast<Engines::Graphics::Camera*>(glfwGetWindowUserPointer(window));
     if(camera) camera->processMouseScroll(static_cast<float>(y_offset));
   }

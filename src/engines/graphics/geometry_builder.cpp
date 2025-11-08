@@ -4,6 +4,7 @@ namespace Engines::Graphics {
   // Public 
   auto GeometryBuilder::createCube() -> GeometryBuilder{return {Type::Cube};}
   auto GeometryBuilder::createSphere() -> GeometryBuilder {return {Type::Sphere};}
+  auto GeometryBuilder::createSurfaceGrid() -> GeometryBuilder {return {Type::Surface};}
   
   GeometryBuilder& GeometryBuilder::setShader(std::shared_ptr<Engines::Graphics::Shader> shader){
     this->shader = shader;
@@ -23,6 +24,21 @@ namespace Engines::Graphics {
 
   GeometryBuilder& GeometryBuilder::setSize(float size){
     this->size = size;
+    return *this;
+  }
+
+  GeometryBuilder& GeometryBuilder::setRows(unsigned int rows){
+    this->rows = rows;
+    return *this;
+  }
+
+  GeometryBuilder& GeometryBuilder::setColumns(unsigned int columns){
+    this->columns = columns;
+    return *this;
+  }
+
+  GeometryBuilder& GeometryBuilder::setSpace(float space){
+    this->space = space;
     return *this;
   }
 
@@ -56,6 +72,9 @@ namespace Engines::Graphics {
           this->sector_count, this->stack_count, this->shader, this->is_debug);
       case Type::Cube:
         return std::make_unique<Cube>(this->size, this->color, this->position, 
+          this->sector_count, this->stack_count, this->shader, this->is_debug);
+      case Type::Surface:
+          return std::make_unique<Surface>(this->rows, this->columns, this->space, this->color, this->position, 
           this->sector_count, this->stack_count, this->shader, this->is_debug);
       default:
         return nullptr;

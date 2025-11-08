@@ -18,6 +18,7 @@ namespace Engines::Graphics {
     this->setupMesh();
   }
 
+  // Clean up
   Sphere::~Sphere(){
     glDeleteVertexArrays(1, &this->VAO);
     glDeleteBuffers(1, &this->VBO);
@@ -52,13 +53,7 @@ namespace Engines::Graphics {
         this->vertices.push_back({position, normal, texture});
       }
     }
-    if(!this->is_debug) return;
-    
-    for(auto vertex:vertices){
-      std::cout << "Position(x, y, z) = " << "(" << vertex.position.x << ", " << vertex.position.y << ", " << vertex.position.z << ")" << std::endl;
-      std::cout << "Normal(x, y, z) = " << "(" << vertex.normal.x << ", " << vertex.normal.y << ", " << vertex.normal.z << ")" << std::endl;
-      std::cout << "Texture(x, y) = " << "(" << vertex.texture.x << ", " << vertex.texture.y <<  ")" << std::endl;
-    }
+    if(this->is_debug) this->logVertices(); 
   }
 
   void Sphere::processIndices(){
@@ -93,7 +88,7 @@ namespace Engines::Graphics {
     glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
   
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
 
     // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
