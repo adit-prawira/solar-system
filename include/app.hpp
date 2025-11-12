@@ -45,7 +45,7 @@ namespace Application {
       glm::vec3 light_position{2.0f, 4.0f, 2.0f};
 
       void processInput(GLFWwindow *window);
-
+      std::vector<std::shared_ptr<Simulation::CelestialBody>> generateCelestialBodies(std::shared_ptr<Engines::Graphics::Shader> shader);
       static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
       static void mouseCallback(GLFWwindow *window, double x_position, double y_position);
       static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);

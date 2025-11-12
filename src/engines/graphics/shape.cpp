@@ -19,7 +19,10 @@ namespace Engines::Graphics{
   
   auto Shape::getVertices() -> std::vector<Vertex>&{ return vertices;}
   auto Shape::getIndices() -> std::vector<unsigned int>&{ return indices;}
-  
+  auto Shape::getPosition() -> glm::mat4{return position;}
+  void Shape::updatePosition(glm::mat4 new_position){
+    this->position = new_position;
+  }
   void Shape::updateVertices(){
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, this->vertices.size() * sizeof(Vertex), this->vertices.data());

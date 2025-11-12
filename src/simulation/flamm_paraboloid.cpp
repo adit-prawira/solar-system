@@ -19,7 +19,7 @@ namespace Simulation {
   void FlammParaboloid::apply(std::vector<std::shared_ptr<CelestialBody>> celestial_bodies){
     auto& vertices = this->getSurface()->getVertices();
     const auto& indices = this->getSurface()->getIndices();
-    
+
     for(auto &vertex:vertices)
       vertex.position.y = 0.0f;
 
@@ -35,8 +35,9 @@ namespace Simulation {
         
         float r = std::sqrt(x_relative * x_relative + z_relative*z_relative);   
         if(r < r_min) r = r_min;
-        const float pit_depth =  mass_depth_scale * 2.0f * std::sqrt(rs * (r - rs));
-        vertex.position.y = std::max(vertex.position.y, pit_depth);
+        const float pit_depth = EXAGGERATION_DEPTH_SCALE *  mass_depth_scale * 2.0f * std::sqrt(rs * (r - rs));
+        const float final_depth = std::max(vertex.position.y, pit_depth);
+        vertex.position.y = final_depth;
         vertex.position.x = x_relative + celestial_body->getPosition().x;
         vertex.position.z = z_relative + celestial_body->getPosition().z;
         vertex.normal = glm::vec3(0.0f);
@@ -56,6 +57,16 @@ namespace Simulation {
 
     for(auto &vertex:vertices)
       vertex.normal = glm::normalize(vertex.normal);
+
+    auto vertex = *std::max_element(vertices.begin(), vertices.end(), [](const Engines::Graphics::Vertex& current, const Engines::Graphics::Vertex& next){
+      return current.position.y < next.position.y;
+    });
+    auto current_position = this->getSurface()->getPosition();
+    auto current_translation = glm::vec3(current_position[3]);
+    current_translation.y = -vertex.position.y;
+    current_position[3] = glm::vec4(current_translation, 1.0f);
+
+    this->getSurface()->updatePosition(current_position);
     this->getSurface()->updateVertices();
   }
 

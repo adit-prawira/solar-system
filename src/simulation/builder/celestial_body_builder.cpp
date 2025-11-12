@@ -10,6 +10,16 @@ namespace Simulation{
     return *this;
   }
 
+  CelestialBodyBuilder& CelestialBodyBuilder::setHasOrbit(float has_orbit){
+    this->has_orbit = has_orbit;
+    return *this;
+  }
+
+  CelestialBodyBuilder& CelestialBodyBuilder::setOrbitCenter(glm::vec3 orbit_center){
+    this->orbit_center = orbit_center;
+    return *this;
+  }
+
   CelestialBodyBuilder& CelestialBodyBuilder::setMagnification(float magnification){
     this->magnification = magnification;
     return *this;
@@ -39,6 +49,10 @@ namespace Simulation{
       .setVelocity(glm::vec3{0.0f, 0.0f, 0.0f})
       .setAcceleration(glm::vec3{0.0f, 0.0f, 0.0f})
       .setShape(std::move(shape))
+      .setHasOrbit(this->has_orbit)
+      .setOrbitCenter(this->orbit_center)
+      .setOrbitColor(this->color)
+      .setOrbitShader(shader)
       .build();
     return celestial_body;
   }

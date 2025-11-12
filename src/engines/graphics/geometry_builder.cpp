@@ -5,7 +5,8 @@ namespace Engines::Graphics {
   auto GeometryBuilder::createCube() -> GeometryBuilder{return {Type::Cube};}
   auto GeometryBuilder::createSphere() -> GeometryBuilder {return {Type::Sphere};}
   auto GeometryBuilder::createSurfaceGrid() -> GeometryBuilder {return {Type::Surface};}
-  
+  auto GeometryBuilder::createRing() -> GeometryBuilder {return {Type::Ring};}
+
   GeometryBuilder& GeometryBuilder::setShader(std::shared_ptr<Engines::Graphics::Shader> shader){
     this->shader = shader;
     return *this;
@@ -19,6 +20,21 @@ namespace Engines::Graphics {
   
   GeometryBuilder& GeometryBuilder::setRadius(float radius){
     this->radius = radius;
+    return *this;
+  }
+
+  GeometryBuilder& GeometryBuilder::setOuterRadius(float outer_radius){
+    this->outer_radius = outer_radius;
+    return *this;
+  }
+
+  GeometryBuilder& GeometryBuilder::setInnerRadius(float inner_radius){
+    this->inner_radius = inner_radius;
+    return *this;
+  }
+  
+  GeometryBuilder& GeometryBuilder::setCenter(glm::vec3 center){
+    this->center = center;
     return *this;
   }
 
@@ -76,6 +92,9 @@ namespace Engines::Graphics {
       case Type::Surface:
           return std::make_unique<Surface>(this->rows, this->columns, this->space, this->color, this->position, 
           this->sector_count, this->stack_count, this->shader, this->is_debug);
+      case Type::Ring:
+            return std::make_unique<Ring>(this->outer_radius, this->inner_radius, this->segments, this->center, 
+              this->color, this->position, this->sector_count, this->stack_count, this->shader, this->is_debug);
       default:
         return nullptr;
     }

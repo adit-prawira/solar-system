@@ -26,7 +26,8 @@ namespace Engines::Graphics {
       
       std::vector<Vertex>& getVertices();
       std::vector<unsigned int>& getIndices();
-
+      glm::mat4 getPosition();
+      void updatePosition(glm::mat4 new_position);
       void updateVertices();
     protected:
       GLuint VAO, VBO, EBO;

@@ -38,93 +38,25 @@ namespace Application {
     glEnable(GL_DEPTH_TEST);
 
     // Shader
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.5f, 10000.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.5f, 30000.0f);
     auto shader = std::make_shared<Engines::Graphics::Shader>("shaders/vertex.glsl", "shaders/fragment.glsl");
     this->camera = std::make_unique<Engines::Graphics::Camera>();
     this->camera->setShader(shader)
-      .setSpeed(15.0f)
+      .setSpeed(20.0f)
       .build();
 
     glfwSetWindowUserPointer(window, this->camera.get());
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetScrollCallback(window, scrollCallback); // if you use scroll to zoom
-
-    const float distance_magnification = 100.0f, surface_size = 200;    
-    const float distance_sun_to_mercury = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_MERCURY_M,surface_size,distance_magnification),
-      distance_sun_to_venus = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_VENUS_M,surface_size,distance_magnification),
-      distance_sun_to_earth = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_EARTH_M,surface_size,distance_magnification),
-      distance_sun_to_mars = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_MARS_M,surface_size,distance_magnification),
-      distance_sun_to_jupiter = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_JUPITER_M,surface_size,distance_magnification/2),
-      distance_sun_to_saturn = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_SATURN_M,surface_size,distance_magnification/3),
-      distance_sun_to_uranus = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_URANUS_M,surface_size,distance_magnification/5),
-      distance_sun_to_neptune = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_NEPTUNE_M,surface_size,distance_magnification/7),
-      distance_sun_to_pluto = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_PLUTO_M,surface_size,distance_magnification/8);
-
-    std::vector<std::shared_ptr<Simulation::CelestialBody>> celestial_bodies;
-    auto sun = Simulation::Sun()
-      .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
-      .setPosition(glm::vec3(0.0f, 50.0f, 0.0f))
-      .setMagnification(2.0f)
-      .build(shader),
-      mercury = Simulation::Mercury()
-      .setPosition(glm::vec3(distance_sun_to_mercury, 50.0f, 0.0f))
-      .setColor(glm::vec3(0.6f, 0.5f, 0.4f))
-      .setMagnification(10.0f)
-      .build(shader),
-      venus = Simulation::Venus()
-          .setPosition(glm::vec3(distance_sun_to_venus, 50.0f, 0.0f))
-          .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
-          .setMagnification(10.0f)
-          .build(shader),
-      earth = Simulation::Earth()
-          .setPosition(glm::vec3(distance_sun_to_earth, 50.0f, 0.0f))
-          .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
-          .setMagnification(10.0f)
-          .build(shader),
-      mars = Simulation::Earth()
-          .setPosition(glm::vec3(distance_sun_to_mars, 50.0f, 0.0f))
-          .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
-          .setMagnification(10.0f)
-          .build(shader),
-      jupiter = Simulation::Jupiter()
-          .setPosition(glm::vec3(distance_sun_to_jupiter, 50.0f, 0.0f))
-          .setColor(glm::vec3(0.9f, 0.7f, 0.5f))
-          .setMagnification(5.0f)
-          .build(shader),
-      saturn = Simulation::Saturn()
-          .setPosition(glm::vec3(distance_sun_to_saturn, 50.0f, 0.0f))
-          .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
-          .setMagnification(5.0f)
-          .build(shader),
-      uranus = Simulation::Uranus()
-          .setPosition(glm::vec3(distance_sun_to_uranus, 50.0f, 0.0f))
-          .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
-          .setMagnification(7.0f)
-          .build(shader),
-      neptune = Simulation::Neptune()
-          .setPosition(glm::vec3(distance_sun_to_neptune, 50.0f, 0.0f))
-          .setColor(glm::vec3(0.3f, 0.3f, 1.0f))
-          .setMagnification(7.0f)
-          .build(shader),
-      pluto = Simulation::Pluto()
-          .setPosition(glm::vec3(distance_sun_to_pluto, 50.0f, 0.0f))
-          .setColor(glm::vec3(0.8f, 0.7f, 0.6f))
-          .setMagnification(20.0f)
-          .build(shader);
-
-    celestial_bodies.insert(celestial_bodies.end(), {
-      sun, mercury, venus,
-      earth, mars, jupiter,
-      saturn, uranus, neptune,
-      pluto
-    });
+    const float surface_size = 80;    
+    auto celestial_bodies = this->generateCelestialBodies(shader);
 
     glm::mat4 surface_position = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     auto surface_shape = Engines::Graphics::GeometryBuilder::createSurfaceGrid()
       .setRows(static_cast<int>(surface_size))
       .setColumns(static_cast<int>(surface_size))
-      .setSpace(20.0f)
+      .setSpace(200.0f)
       .setPosition(surface_position)
       .setColor(glm::vec3(0.2f, 0.2f, 0.2f))
       .setShader(shader)
@@ -147,7 +79,7 @@ namespace Application {
       shader->setVec3("light_position", this->light_position);
       shader->setVec3("light_color", glm::vec3(1.0f));
       this->camera->stream();
-
+            
       if(show_flamm_paraboloid){
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         surface.apply(celestial_bodies);
@@ -155,8 +87,12 @@ namespace Application {
       }
   
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      for(auto &celestial_body : celestial_bodies)
+      for(auto &celestial_body : celestial_bodies){
         celestial_body->getShape()->draw();
+        if(!celestial_body->hasOrbit()) continue;
+        celestial_body->getOrbit()->draw();
+      }
+        
 
       glfwSwapBuffers(window);
       glfwPollEvents();
@@ -240,5 +176,93 @@ namespace Application {
   void App::scrollCallback(GLFWwindow *window, [[maybe_unused]]double x_offset, double y_offset){
     auto* camera = static_cast<Engines::Graphics::Camera*>(glfwGetWindowUserPointer(window));
     if(camera) camera->processMouseScroll(static_cast<float>(y_offset));
+  }
+
+  std::vector<std::shared_ptr<Simulation::CelestialBody>> App::generateCelestialBodies(std::shared_ptr<Engines::Graphics::Shader> shader){
+    const float distance_magnification = 20.0f;    
+    const float distance_sun_to_mercury = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_MERCURY_M, distance_magnification),
+      distance_sun_to_venus = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_VENUS_M, distance_magnification),
+      distance_sun_to_earth = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_EARTH_M, distance_magnification),
+      distance_sun_to_mars = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_MARS_M, distance_magnification),
+      distance_sun_to_jupiter = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_JUPITER_M, distance_magnification/2),
+      distance_sun_to_saturn = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_SATURN_M, distance_magnification/2),
+      distance_sun_to_uranus = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_URANUS_M, distance_magnification/3),
+      distance_sun_to_neptune = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_NEPTUNE_M, distance_magnification/4),
+      distance_sun_to_pluto = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_PLUTO_M, distance_magnification/4);
+
+    const float magnification = 1500, planet_magnification = 5100;
+
+    const auto orbit_center = glm::vec3(0.0f, 50.0f, 0.0f);
+    std::vector<std::shared_ptr<Simulation::CelestialBody>> celestial_bodies{
+      Simulation::Sun()
+        .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
+        .setPosition(glm::vec3(0.0f, 50.0f, 0.0f))
+        .setMagnification(magnification)
+        .build(shader), 
+      Simulation::Mercury()
+        .setPosition(glm::vec3(distance_sun_to_mercury, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.6f, 0.5f, 0.4f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader), 
+      Simulation::Venus()
+        .setPosition(glm::vec3(distance_sun_to_venus, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader),
+      Simulation::Earth()
+        .setPosition(glm::vec3(distance_sun_to_earth, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader), 
+      Simulation::Mars()
+        .setPosition(glm::vec3(distance_sun_to_mars, 50.0f, 0.0f))
+        .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader), 
+      Simulation::Jupiter()
+        .setPosition(glm::vec3(distance_sun_to_jupiter, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.9f, 0.7f, 0.5f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader),
+      Simulation::Saturn()
+        .setPosition(glm::vec3(distance_sun_to_saturn, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader), 
+      Simulation::Uranus()
+        .setPosition(glm::vec3(distance_sun_to_uranus, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader), 
+      Simulation::Neptune()
+        .setPosition(glm::vec3(distance_sun_to_neptune, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.3f, 0.3f, 1.0f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader),
+      Simulation::Pluto()
+        .setPosition(glm::vec3(distance_sun_to_pluto, 50.0f, 0.0f))
+        .setColor(glm::vec3(0.8f, 0.7f, 0.6f))
+        .setMagnification(planet_magnification)
+        .setHasOrbit(true)
+        .setOrbitCenter(orbit_center)
+        .build(shader)
+    };
+    return celestial_bodies;
   }
 }
