@@ -11,6 +11,11 @@ namespace Engines::Graphics{
     return *this;
   }
 
+  Camera& Camera::setTrailShader(std::shared_ptr<Engines::Graphics::Shader> trail_shader){
+    this->trail_shader = trail_shader;
+    return *this;
+  }
+
   Camera& Camera::setCameraFront(glm::vec3 camera_front){
     this->camera_front = camera_front;
     return *this;
@@ -38,41 +43,42 @@ namespace Engines::Graphics{
   void Camera::stream(){
     shader->setMat4("view", this->getView());
     shader->setVec3("view_position", this->camera_position);
+    trail_shader->setMat4("view", this->getView());
   }
 
   void Camera::left(){
     this->execute([this](){
-      this->camera_position.x -= this->camera_speed;
+      this->camera_position -= this->camera_right * this->camera_speed;
     });
   }
 
   void Camera::right(){
     this->execute([this](){
-      this->camera_position.x += this->camera_speed;
+      this->camera_position += this->camera_right * this->camera_speed;
     });
   }
 
   void Camera::up(){
     this->execute([this](){
-      this->camera_position.y += this->camera_speed;
+      this->camera_position += this->camera_up * this->camera_speed;
     });
   }
 
   void Camera::down(){
     this->execute([this](){
-      this->camera_position.y -= this->camera_speed;
+      this->camera_position -= this->camera_up * this->camera_speed;
     });
   }
   
-  void Camera::zoomIn(){
+  void Camera::forward(){
     this->execute([this](){
-      this->camera_position.z -= this->camera_speed;
+      this->camera_position += this->camera_front * this->camera_speed;
     });
   }
 
-  void Camera::zoomOut(){
+  void Camera::backward(){
     this->execute([this](){
-      this->camera_position.z += this->camera_speed;
+      this->camera_position -= this->camera_front * this->camera_speed;
     });
   }
 
@@ -143,5 +149,8 @@ namespace Engines::Graphics{
         sin(pitch), 
         -cos(pitch) * cos(yaw)
     ));
+
+    this->camera_right = glm::normalize(glm::cross(this->camera_front, glm::vec3(0,1,0)));
+    this->camera_up = glm::normalize(glm::cross(this->camera_right, this->camera_front));
   }
 }

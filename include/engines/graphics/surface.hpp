@@ -9,7 +9,7 @@ namespace Engines::Graphics {
         unsigned int columns,
         float space, 
         glm::vec3 color, 
-        glm::mat4 position,
+        glm::mat4 model_matrix,
         unsigned int sector_count, 
         unsigned int stack_count, 
         std::shared_ptr<Engines::Graphics::Shader> shader,

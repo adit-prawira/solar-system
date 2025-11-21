@@ -3,14 +3,14 @@
 namespace Engines::Graphics{
   Shape::Shape(
         glm::vec3 color,
-        glm::mat4 position,
+        glm::mat4 model_matrix,
         unsigned int sector_count, 
         unsigned int stack_count, 
         std::shared_ptr<Engines::Graphics::Shader> shader,
         bool is_debug)
         {
           this->color = color;
-          this->position = position;
+          this->model_matrix = model_matrix;
           this->sector_count = sector_count;
           this->stack_count = stack_count;
           this->is_debug = is_debug;
@@ -19,9 +19,10 @@ namespace Engines::Graphics{
   
   auto Shape::getVertices() -> std::vector<Vertex>&{ return vertices;}
   auto Shape::getIndices() -> std::vector<unsigned int>&{ return indices;}
-  auto Shape::getPosition() -> glm::mat4{return position;}
-  void Shape::updatePosition(glm::mat4 new_position){
-    this->position = new_position;
+  auto Shape::getModelMatrix() -> glm::mat4{return model_matrix;}
+  auto Shape::getColor() -> glm::vec3{return color;}
+  void Shape::updateModelMatrix(glm::mat4 new_model_matrix){
+    this->model_matrix = new_model_matrix;
   }
   void Shape::updateVertices(){
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);

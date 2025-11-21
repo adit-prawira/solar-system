@@ -40,7 +40,7 @@ namespace Engines::Physics {
       glm::vec3 getAcceleration() const {return acceleration;};
       glm::vec3 getVelocity() const {return velocity;};
       glm::vec3 getPosition() const {return position;};
-
+      
     protected:
       float mass;
       std::unique_ptr<Engines::Graphics::Shape> shape;

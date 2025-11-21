@@ -12,8 +12,8 @@ namespace Engines::Graphics {
     return *this;
   }
 
-  GeometryBuilder& GeometryBuilder::setPosition(glm::mat4 position){
-    this->position = position;
+  GeometryBuilder& GeometryBuilder::setModelMatrix(glm::mat4 model_matrix){
+    this->model_matrix = model_matrix;
     return *this;
   }
   
@@ -84,17 +84,17 @@ namespace Engines::Graphics {
 
     switch(type){
       case Type::Sphere:
-        return std::make_unique<Sphere>(this->radius, this->color, this->position, 
+        return std::make_unique<Sphere>(this->radius, this->color, this->model_matrix, 
           this->sector_count, this->stack_count, this->shader, this->is_debug);
       case Type::Cube:
-        return std::make_unique<Cube>(this->size, this->color, this->position, 
+        return std::make_unique<Cube>(this->size, this->color, this->model_matrix, 
           this->sector_count, this->stack_count, this->shader, this->is_debug);
       case Type::Surface:
-          return std::make_unique<Surface>(this->rows, this->columns, this->space, this->color, this->position, 
+          return std::make_unique<Surface>(this->rows, this->columns, this->space, this->color, this->model_matrix, 
           this->sector_count, this->stack_count, this->shader, this->is_debug);
       case Type::Ring:
             return std::make_unique<Ring>(this->outer_radius, this->inner_radius, this->segments, this->center, 
-              this->color, this->position, this->sector_count, this->stack_count, this->shader, this->is_debug);
+              this->color, this->model_matrix, this->sector_count, this->stack_count, this->shader, this->is_debug);
       default:
         return nullptr;
     }

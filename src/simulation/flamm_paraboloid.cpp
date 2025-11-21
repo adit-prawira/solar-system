@@ -24,22 +24,23 @@ namespace Simulation {
       vertex.position.y = 0.0f;
 
     for(auto &celestial_body : celestial_bodies){
+      if(!celestial_body->isStar()) continue;
       const float mass = celestial_body->getMass();
-      const float rs = celestial_body->getRadius();
+      const float rs = celestial_body->getRenderRadius();
       const float r_min = rs + std::max(1e-6f, 0.01f * rs); 
       float mass_depth_scale = glm::clamp(mass / Engines::Physics::Constants::MASS_SUN_KG, 0.1f, 1.0f);
 
       for(auto &vertex : vertices){
-        const float x_relative = vertex.position.x - celestial_body->getPosition().x;
-        const float z_relative = vertex.position.z - celestial_body->getPosition().z;
+        const float x_relative = vertex.position.x - celestial_body->getRenderPosition().x;
+        const float z_relative = vertex.position.z - celestial_body->getRenderPosition().z;
         
         float r = std::sqrt(x_relative * x_relative + z_relative*z_relative);   
         if(r < r_min) r = r_min;
         const float pit_depth = EXAGGERATION_DEPTH_SCALE *  mass_depth_scale * 2.0f * std::sqrt(rs * (r - rs));
         const float final_depth = std::max(vertex.position.y, pit_depth);
         vertex.position.y = final_depth;
-        vertex.position.x = x_relative + celestial_body->getPosition().x;
-        vertex.position.z = z_relative + celestial_body->getPosition().z;
+        vertex.position.x = x_relative + celestial_body->getRenderPosition().x;
+        vertex.position.z = z_relative + celestial_body->getRenderPosition().z;
         vertex.normal = glm::vec3(0.0f);
       }
     }
@@ -61,12 +62,12 @@ namespace Simulation {
     auto vertex = *std::max_element(vertices.begin(), vertices.end(), [](const Engines::Graphics::Vertex& current, const Engines::Graphics::Vertex& next){
       return current.position.y < next.position.y;
     });
-    auto current_position = this->getSurface()->getPosition();
+    auto current_position = this->getSurface()->getModelMatrix();
     auto current_translation = glm::vec3(current_position[3]);
     current_translation.y = -vertex.position.y;
     current_position[3] = glm::vec4(current_translation, 1.0f);
 
-    this->getSurface()->updatePosition(current_position);
+    this->getSurface()->updateModelMatrix(current_position);
     this->getSurface()->updateVertices();
   }
 

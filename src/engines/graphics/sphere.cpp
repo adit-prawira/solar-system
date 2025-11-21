@@ -6,12 +6,12 @@ namespace Engines::Graphics {
   Sphere::Sphere(
         float radius, 
         glm::vec3 color, 
-        glm::mat4 position,
+        glm::mat4 model_matrix,
         unsigned int sector_count, 
         unsigned int stack_count, 
         std::shared_ptr<Engines::Graphics::Shader> shader,
         bool is_debug):
-        Shape(color, position, sector_count, stack_count, shader, is_debug),
+        Shape(color, model_matrix, sector_count, stack_count, shader, is_debug),
         radius(radius){
     this->processVertices();
     this->processIndices();
@@ -26,7 +26,7 @@ namespace Engines::Graphics {
   }
 
   void Sphere::draw() {
-    this->shader->setMat4("model", this->position);
+    this->shader->setMat4("model", this->model_matrix);
     this->shader->setVec3("object_color", this->color);
 
     glBindVertexArray(this->VAO);

@@ -8,6 +8,7 @@ namespace Engines::Graphics {
     public:
       Camera& setSpeed(float camera_speed);
       Camera& setShader(std::shared_ptr<Engines::Graphics::Shader> shader);
+      Camera& setTrailShader(std::shared_ptr<Engines::Graphics::Shader> trail_shader);
       Camera& setCameraFront(glm::vec3 camera_front);
       Camera& setCameraAngleLimit(float camera_angle_limit);
       Camera& setCameraPitchLimit(float camera_pitch_limit);
@@ -20,8 +21,8 @@ namespace Engines::Graphics {
       void down();
       void left();
       void right();
-      void zoomIn();
-      void zoomOut();
+      void forward();
+      void backward();
       void rotateClockwise();
       void rotateAntiClockwise();
       void reset();
@@ -42,11 +43,15 @@ namespace Engines::Graphics {
       float initial_camera_angle = 0.0f; // current horizontal rotation angle
 
       std::shared_ptr<Engines::Graphics::Shader> shader = nullptr;
+      std::shared_ptr<Engines::Graphics::Shader> trail_shader = nullptr;
       glm::vec3 camera_front{0.0f, -0.5f, -1.0f};
+      glm::vec3 camera_right{0.0f, -0.5f, -1.0f};
+      glm::vec3 camera_up{0.0f, -0.5f, -1.0f};
+
       glm::vec3 initial_camera_front{0.0f, -0.5f, -1.0f};
 
-      glm::vec3 camera_position{0.0f, 500.0f, 800.0f};
-      glm::vec3 initial_camera_position{0.0f, 500.0f, 470.0f};
+      glm::vec3 camera_position{0.0f, 800.0f, 1000.0f};
+      glm::vec3 initial_camera_position{0.0f, 800.0f, 1000.0f};
 
       template<typename Func>
       void execute(Func &&f);

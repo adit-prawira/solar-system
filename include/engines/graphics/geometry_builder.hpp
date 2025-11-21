@@ -32,7 +32,7 @@ namespace Engines::Graphics{
       GeometryBuilder& setStackCount(unsigned int stack_count);
       GeometryBuilder& setColor(glm::vec3 color);
       GeometryBuilder& isDebug(bool is_debug);
-      GeometryBuilder& setPosition(glm::mat4 position);
+      GeometryBuilder& setModelMatrix(glm::mat4 model_matrix);
       GeometryBuilder& setShader(std::shared_ptr<Engines::Graphics::Shader> shader);
       std::unique_ptr<Shape> build() const;
 
@@ -51,7 +51,7 @@ namespace Engines::Graphics{
       bool is_debug = false;
       std::shared_ptr<Engines::Graphics::Shader> shader = nullptr;
       glm::vec3 color{0.6f, 1.0f, 1.0f};
-      glm::mat4 position;
+      glm::mat4 model_matrix;
       enum class Type {None, Cube, Sphere, Surface, Ring};
       Type type = Type::None;
 

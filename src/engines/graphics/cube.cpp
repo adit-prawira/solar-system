@@ -4,12 +4,12 @@
 namespace Engines::Graphics {
   Cube::Cube(float size, 
         glm::vec3 color, 
-        glm::mat4 position,
+        glm::mat4 model_matrix,
         unsigned int sector_count, 
         unsigned int stack_count, 
         std::shared_ptr<Engines::Graphics::Shader> shader,
         bool is_debug):
-        Shape(color, position, sector_count, stack_count, shader, is_debug),
+        Shape(color, model_matrix, sector_count, stack_count, shader, is_debug),
         size(size){};
 
   Cube::~Cube(){

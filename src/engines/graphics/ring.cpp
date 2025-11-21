@@ -7,12 +7,12 @@ namespace Engines::Graphics {
     unsigned int segments,
     glm::vec3 center,
     glm::vec3 color, 
-    glm::mat4 position,
+    glm::mat4 model_matrix,
     unsigned int sector_count, 
     unsigned int stack_count, 
     std::shared_ptr<Engines::Graphics::Shader> shader,
     bool is_debug
-  ): Shape(color, position, sector_count, stack_count, shader, is_debug),
+  ): Shape(color, model_matrix, sector_count, stack_count, shader, is_debug),
     outer_radius(outer_radius),
     inner_radius(inner_radius),
     segments(segments),
@@ -29,7 +29,7 @@ namespace Engines::Graphics {
   }
   
   void Ring::draw(){
-    this->shader->setMat4("model", this->position);
+    this->shader->setMat4("model", this->model_matrix);
     this->shader->setVec3("object_color", this->color);
 
     glBindVertexArray(this->VAO);

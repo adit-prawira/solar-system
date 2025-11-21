@@ -15,7 +15,7 @@ namespace Engines::Graphics {
     public:
       Shape(
         glm::vec3 color,
-        glm::mat4 position,
+        glm::mat4 model_matrix,
         unsigned int sector_count, 
         unsigned int stack_count, 
         std::shared_ptr<Engines::Graphics::Shader> shader,
@@ -26,8 +26,9 @@ namespace Engines::Graphics {
       
       std::vector<Vertex>& getVertices();
       std::vector<unsigned int>& getIndices();
-      glm::mat4 getPosition();
-      void updatePosition(glm::mat4 new_position);
+      glm::vec3 getColor();
+      glm::mat4 getModelMatrix();
+      void updateModelMatrix(glm::mat4 new_model_matrix);
       void updateVertices();
     protected:
       GLuint VAO, VBO, EBO;
@@ -37,7 +38,7 @@ namespace Engines::Graphics {
       unsigned int stack_count = 18;
       std::shared_ptr<Engines::Graphics::Shader> shader = nullptr;
       glm::vec3 color{0.6f, 1.0f, 1.0f};
-      glm::mat4 position;
+      glm::mat4 model_matrix;
       std::vector<Vertex> vertices;
       std::vector<unsigned int> indices;
 

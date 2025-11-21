@@ -10,8 +10,23 @@ namespace Simulation{
     return *this;
   }
 
+  CelestialBodyBuilder& CelestialBodyBuilder::setOrbitalVelocity(glm::vec3 orbital_velocity){
+    this->orbital_velocity = orbital_velocity;
+    return *this;
+  }
+
   CelestialBodyBuilder& CelestialBodyBuilder::setHasOrbit(float has_orbit){
     this->has_orbit = has_orbit;
+    return *this;
+  }
+
+  CelestialBodyBuilder& CelestialBodyBuilder::setIsDebugMode(bool is_debug_mode){
+    this->is_debug_mode = is_debug_mode;
+    return *this;
+  }
+  
+  CelestialBodyBuilder& CelestialBodyBuilder::setIsStar(float is_star){
+    this->is_star = is_star;
     return *this;
   }
 
@@ -20,40 +35,47 @@ namespace Simulation{
     return *this;
   }
 
-  CelestialBodyBuilder& CelestialBodyBuilder::setMagnification(float magnification){
-    this->magnification = magnification;
+  CelestialBodyBuilder& CelestialBodyBuilder::setRenderRadiusMagnification(float magnification){
+    this->render_radius_magnification = magnification;
     return *this;
   }
 
-  glm::mat4 CelestialBodyBuilder::getRenderPosition(){
-    return glm::translate(glm::mat4(1.0f), this->position);
+  CelestialBodyBuilder& CelestialBodyBuilder::setRenderPositionMagnification(float magnification){
+    this->render_position_magnification = magnification;
+    return *this;
   }
 
   std::shared_ptr<Simulation::CelestialBody> CelestialBodyBuilder::buildBase(
+    const std::string name,
     float radius_m,
     float mass_kg,
     std::shared_ptr<Engines::Graphics::Shader> shader){
-    auto radius_px = Engines::Maths::Converter::meterToPixel(radius_m, &this->magnification);
-    auto shape = Engines::Graphics::GeometryBuilder::createSphere()
-            .setRadius(radius_px) 
-            .setSectorCount(30)
-            .setStackCount(18)
-            .setPosition(this->getRenderPosition())
-            .setColor(this->color)
-            .setShader(shader)
-            .build();
     auto celestial_body = std::make_shared<Simulation::CelestialBody>();
-    celestial_body->setRadius(radius_px)
+    celestial_body->setName(name)
+      .setIsDebugMode(this->is_debug_mode)
+      .setIsStar(this->is_star)
+      .setRadius(radius_m)
       .setMass(mass_kg)
       .setPosition(this->position)
+      .setRenderRadiusMagnification(this->render_radius_magnification)
+      .setRenderPositionMagnification(this->render_position_magnification)
       .setVelocity(glm::vec3{0.0f, 0.0f, 0.0f})
       .setAcceleration(glm::vec3{0.0f, 0.0f, 0.0f})
-      .setShape(std::move(shape))
       .setHasOrbit(this->has_orbit)
       .setOrbitCenter(this->orbit_center)
       .setOrbitColor(this->color)
-      .setOrbitShader(shader)
+      .setOrbitShader(shader);
+    
+    auto model_matrix = glm::translate(glm::mat4(1.0f), celestial_body->getRenderPosition());
+    auto shape = Engines::Graphics::GeometryBuilder::createSphere()
+      .setRadius(celestial_body->getRenderRadius()) 
+      .setSectorCount(30)
+      .setStackCount(18)
+      .setModelMatrix(model_matrix)
+      .setColor(this->color)
+      .setShader(shader)
       .build();
+    celestial_body->setShape(std::move(shape)).build();
     return celestial_body;
   }
 }
