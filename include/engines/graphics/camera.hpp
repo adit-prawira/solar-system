@@ -20,8 +20,8 @@ namespace Engines::Graphics {
       void down();
       void left();
       void right();
-      void zoomIn();
-      void zoomOut();
+      void forward();
+      void backward();
       void rotateClockwise();
       void rotateAntiClockwise();
       void reset();
@@ -43,10 +43,13 @@ namespace Engines::Graphics {
 
       std::shared_ptr<Engines::Graphics::Shader> shader = nullptr;
       glm::vec3 camera_front{0.0f, -0.5f, -1.0f};
+      glm::vec3 camera_right{0.0f, -0.5f, -1.0f};
+      glm::vec3 camera_up{0.0f, -0.5f, -1.0f};
+
       glm::vec3 initial_camera_front{0.0f, -0.5f, -1.0f};
 
-      glm::vec3 camera_position{0.0f, 500.0f, 800.0f};
-      glm::vec3 initial_camera_position{0.0f, 500.0f, 470.0f};
+      glm::vec3 camera_position{0.0f, 7000.0f, 10000.0f};
+      glm::vec3 initial_camera_position{0.0f, 7000.0f, 10000.0f};
 
       template<typename Func>
       void execute(Func &&f);

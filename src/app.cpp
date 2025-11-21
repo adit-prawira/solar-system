@@ -4,12 +4,6 @@ namespace Application {
   App::App(const std::string name):name(name){}
 
   void App::run(){
-
-    std::string input_flamm_paraboloid;
-    std::cout << "Render Flamm Paraboloid (y/n) => ";
-    std::cin >> input_flamm_paraboloid;
-    bool show_flamm_paraboloid = input_flamm_paraboloid=="y";
-
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -49,24 +43,9 @@ namespace Application {
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetScrollCallback(window, scrollCallback); // if you use scroll to zoom
-    const float surface_size = 80;    
-    auto celestial_bodies = this->generateCelestialBodies(shader);
 
-    glm::mat4 surface_position = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    auto surface_shape = Engines::Graphics::GeometryBuilder::createSurfaceGrid()
-      .setRows(static_cast<int>(surface_size))
-      .setColumns(static_cast<int>(surface_size))
-      .setSpace(200.0f)
-      .setPosition(surface_position)
-      .setColor(glm::vec3(0.2f, 0.2f, 0.2f))
-      .setShader(shader)
-      .build();
-    Engines::Graphics::Surface* raw = dynamic_cast<Engines::Graphics::Surface*>(surface_shape.get());
-    if (!raw) throw std::runtime_error("Builder did not return a Surface");
-    std::unique_ptr<Engines::Graphics::Surface> raw_surface_shape(static_cast<Engines::Graphics::Surface*>(surface_shape.release()));
-    Simulation::FlammParaboloid surface;
-    surface.setSurface(std::move(raw_surface_shape))
-      .build();
+    auto celestial_bodies = this->generateCelestialBodies(shader);
+    auto flamm_paraboloid_surface = this->generateFlammParaboloid(shader);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -80,20 +59,20 @@ namespace Application {
       shader->setVec3("light_color", glm::vec3(1.0f));
       this->camera->stream();
             
-      if(show_flamm_paraboloid){
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        surface.apply(celestial_bodies);
-        surface.getSurface()->draw();
-      }
-  
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       for(auto &celestial_body : celestial_bodies){
+        if(celestial_body->getName() == "Jupiter"){
+          celestial_body->revolve(celestial_bodies, 0.016f);
+        }
         celestial_body->getShape()->draw();
         if(!celestial_body->hasOrbit()) continue;
         celestial_body->getOrbit()->draw();
       }
-        
 
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      flamm_paraboloid_surface.apply(celestial_bodies);
+      flamm_paraboloid_surface.getSurface()->draw();
+      
       glfwSwapBuffers(window);
       glfwPollEvents();
     }
@@ -110,14 +89,14 @@ namespace Application {
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
       this->camera->right();
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-      this->camera->up();
+      this->camera->forward();
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-      this->camera->down();
+      this->camera->backward();
 
     if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-      this->camera->zoomIn();
+      this->camera->up();
     if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-      this->camera->zoomOut();
+      this->camera->down();
 
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         this->camera->rotateClockwise();
@@ -191,14 +170,15 @@ namespace Application {
       distance_sun_to_pluto = Engines::Maths::Converter::scaleDistanceBySurfaceSize(Engines::Physics::Constants::DISTANCE_SUN_PLUTO_M, distance_magnification/4);
 
     const float magnification = 1500, planet_magnification = 5100;
-
     const auto orbit_center = glm::vec3(0.0f, 50.0f, 0.0f);
-    std::vector<std::shared_ptr<Simulation::CelestialBody>> celestial_bodies{
-      Simulation::Sun()
+
+    auto sun = Simulation::Sun()
+        .setIsStar(true)
         .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
         .setPosition(glm::vec3(0.0f, 50.0f, 0.0f))
         .setMagnification(magnification)
-        .build(shader), 
+        .build(shader);
+    std::vector<std::shared_ptr<Simulation::CelestialBody>> celestial_bodies{
       Simulation::Mercury()
         .setPosition(glm::vec3(distance_sun_to_mercury, 50.0f, 0.0f))
         .setColor(glm::vec3(0.6f, 0.5f, 0.4f))
@@ -214,6 +194,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader),
       Simulation::Earth()
+        .setIsDebugMode(true)
         .setPosition(glm::vec3(distance_sun_to_earth, 50.0f, 0.0f))
         .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
         .setMagnification(planet_magnification)
@@ -228,6 +209,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader), 
       Simulation::Jupiter()
+        .setIsDebugMode(true)
         .setPosition(glm::vec3(distance_sun_to_jupiter, 50.0f, 0.0f))
         .setColor(glm::vec3(0.9f, 0.7f, 0.5f))
         .setMagnification(planet_magnification)
@@ -263,6 +245,29 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader)
     };
+    for(auto &celestial_body: celestial_bodies)
+      celestial_body->setOrbitalVelocity(Simulation::CelestialBody::calculateOrbitalVelocity(sun, celestial_body));
+    celestial_bodies.push_back(sun);
     return celestial_bodies;
+  }
+
+  Simulation::FlammParaboloid App::generateFlammParaboloid(std::shared_ptr<Engines::Graphics::Shader> shader){
+    const float surface_size = 80;    
+    glm::mat4 surface_position = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    auto surface_shape = Engines::Graphics::GeometryBuilder::createSurfaceGrid()
+      .setRows(static_cast<int>(surface_size))
+      .setColumns(static_cast<int>(surface_size))
+      .setSpace(200.0f)
+      .setPosition(surface_position)
+      .setColor(glm::vec3(0.2f, 0.2f, 0.2f))
+      .setShader(shader)
+      .build();
+    Engines::Graphics::Surface* raw = dynamic_cast<Engines::Graphics::Surface*>(surface_shape.get());
+    if (!raw) throw std::runtime_error("Builder did not return a Surface");
+    std::unique_ptr<Engines::Graphics::Surface> raw_surface_shape(static_cast<Engines::Graphics::Surface*>(surface_shape.release()));
+    Simulation::FlammParaboloid surface;
+    surface.setSurface(std::move(raw_surface_shape))
+      .build();
+    return surface;
   }
 }

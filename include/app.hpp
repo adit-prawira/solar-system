@@ -46,6 +46,7 @@ namespace Application {
 
       void processInput(GLFWwindow *window);
       std::vector<std::shared_ptr<Simulation::CelestialBody>> generateCelestialBodies(std::shared_ptr<Engines::Graphics::Shader> shader);
+      Simulation::FlammParaboloid generateFlammParaboloid(std::shared_ptr<Engines::Graphics::Shader> shader);
       static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
       static void mouseCallback(GLFWwindow *window, double x_position, double y_position);
       static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);

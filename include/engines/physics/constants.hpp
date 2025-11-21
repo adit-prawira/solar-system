@@ -1,6 +1,7 @@
 #pragma once
 namespace Engines::Physics::Constants {
   constexpr float MASS_SUN_KG = 1.989e30f;
+
   constexpr float RADIUS_SUN_M = 6.963e8f;
 
   constexpr float MASS_MERCURY_KG = 3.301e23f;
@@ -10,6 +11,7 @@ namespace Engines::Physics::Constants {
   constexpr float RADIUS_VENUS_M = 6.0518e6f;
 
   constexpr float MASS_EARTH_KG = 5.972e24f;
+
   constexpr float RADIUS_EARTH_M = 6.371e6f;
 
   constexpr float MASS_MARS_KG = 6.417e23f;
@@ -44,4 +46,6 @@ namespace Engines::Physics::Constants {
   constexpr float DISTANCE_SUN_URANUS_M  = 2.877e12f;
   constexpr float DISTANCE_SUN_NEPTUNE_M = 4.503e12f;
   constexpr float DISTANCE_SUN_PLUTO_M   = 5.906e12f;
+
+  static constexpr float UNIT_SCALE = 1e-6;
 }

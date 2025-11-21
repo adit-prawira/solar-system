@@ -24,6 +24,7 @@ namespace Simulation {
       vertex.position.y = 0.0f;
 
     for(auto &celestial_body : celestial_bodies){
+      if(!celestial_body->isStar()) continue;
       const float mass = celestial_body->getMass();
       const float rs = celestial_body->getRadius();
       const float r_min = rs + std::max(1e-6f, 0.01f * rs); 

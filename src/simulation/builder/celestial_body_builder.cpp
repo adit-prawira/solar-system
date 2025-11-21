@@ -10,8 +10,23 @@ namespace Simulation{
     return *this;
   }
 
+  CelestialBodyBuilder& CelestialBodyBuilder::setOrbitalVelocity(glm::vec3 orbital_velocity){
+    this->orbital_velocity = orbital_velocity;
+    return *this;
+  }
+
   CelestialBodyBuilder& CelestialBodyBuilder::setHasOrbit(float has_orbit){
     this->has_orbit = has_orbit;
+    return *this;
+  }
+
+  CelestialBodyBuilder& CelestialBodyBuilder::setIsDebugMode(bool is_debug_mode){
+    this->is_debug_mode = is_debug_mode;
+    return *this;
+  }
+  
+  CelestialBodyBuilder& CelestialBodyBuilder::setIsStar(float is_star){
+    this->is_star = is_star;
     return *this;
   }
 
@@ -30,6 +45,7 @@ namespace Simulation{
   }
 
   std::shared_ptr<Simulation::CelestialBody> CelestialBodyBuilder::buildBase(
+    const std::string name,
     float radius_m,
     float mass_kg,
     std::shared_ptr<Engines::Graphics::Shader> shader){
@@ -43,7 +59,10 @@ namespace Simulation{
             .setShader(shader)
             .build();
     auto celestial_body = std::make_shared<Simulation::CelestialBody>();
-    celestial_body->setRadius(radius_px)
+    celestial_body->setName(name)
+      .setIsDebugMode(this->is_debug_mode)
+      .setIsStar(this->is_star)
+      .setRadius(radius_px)
       .setMass(mass_kg)
       .setPosition(this->position)
       .setVelocity(glm::vec3{0.0f, 0.0f, 0.0f})
