@@ -5,6 +5,6 @@
 namespace Engines::Maths {
   class Converter {
     public:
-      static float meterToPixel(const float meter, const float *magnification = nullptr);
+      static float meterToPixel(const double meter, const double *magnification = nullptr);
   };
 }

@@ -54,7 +54,7 @@ namespace Application {
     stars.push_back(sun);
     celestial_bodies.erase("Sun");
     
-    celestial_bodies["Earth"]->setIsDebugMode(true);
+    // celestial_bodies["Earth"]->setIsDebugMode(true);
 
     for(auto &[name, celestial_body] : celestial_bodies)
       celestial_body->setOrbitalVelocity(Simulation::CelestialBody::calculateOrbitalVelocity(name, sun, celestial_body, true));
@@ -83,7 +83,7 @@ namespace Application {
         star->getShape()->draw();
 
       for(auto &[_, celestial_body] : celestial_bodies){
-        celestial_body->revolve(stars, 1.0f);
+        celestial_body->revolve(stars, 1.0);
         celestial_body->getShape()->draw();
         celestial_body->getOrbit()->draw();
       }
@@ -180,17 +180,17 @@ namespace Application {
     const float sun_radius_magnification = 1500, 
       planet_radius_magnification = 5100,
       distance_magnification = 20;
-    const auto orbit_center = glm::vec3(0.0f, 50.0f, 0.0f);
+    const auto orbit_center = glm::dvec3(0.0, 50.0, 0.0);
     auto sun = Simulation::Sun()
         .setIsStar(true)
         .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
-        .setPosition(glm::vec3(0.0f, 50.0f, 0.0f))
+        .setPosition(glm::dvec3(0.0, 50.0, 0.0))
         .setRenderRadiusMagnification(sun_radius_magnification)
         .build(shader);
 
     std::vector<std::shared_ptr<Simulation::CelestialBody>> celestial_bodies{
       Simulation::Mercury()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_MERCURY_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_MERCURY_M, 0.0, 0.0))
         .setColor(glm::vec3(0.6f, 0.5f, 0.4f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification)
@@ -198,7 +198,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader), 
       Simulation::Venus()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_VENUS_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_VENUS_M, 0.0, 0.0))
         .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification)
@@ -206,7 +206,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader),
       Simulation::Earth()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_EARTH_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_EARTH_M, 0.0, 0.0))
         .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification)
@@ -214,7 +214,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader), 
       Simulation::Mars()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_MARS_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_MARS_M, 0.0, 0.0))
         .setColor(glm::vec3(1.0f, 0.3f, 0.0f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification)
@@ -222,7 +222,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader), 
       Simulation::Jupiter()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_JUPITER_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_JUPITER_M, 0.0, 0.0))
         .setColor(glm::vec3(0.9f, 0.7f, 0.5f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification/2)
@@ -230,7 +230,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader),
       Simulation::Saturn()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_SATURN_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_SATURN_M, 0.0, 0.0))
         .setColor(glm::vec3(0.9f, 0.8f, 0.5f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification/2)
@@ -238,7 +238,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader), 
       Simulation::Uranus()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_URANUS_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_URANUS_M, 0.0, 0.0))
         .setColor(glm::vec3(0.2f, 0.4f, 1.0f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification/3)
@@ -246,7 +246,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader), 
       Simulation::Neptune()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_NEPTUNE_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_NEPTUNE_M, 0.0, 0.0))
         .setColor(glm::vec3(0.3f, 0.3f, 1.0f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification/4)
@@ -254,7 +254,7 @@ namespace Application {
         .setOrbitCenter(orbit_center)
         .build(shader),
       Simulation::Pluto()
-        .setPosition(sun->getPosition() + glm::vec3(Engines::Physics::Constants::DISTANCE_SUN_PLUTO_M, 0.0f, 0.0f))
+        .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_PLUTO_M, 0.0, 0.0))
         .setColor(glm::vec3(0.8f, 0.7f, 0.6f))
         .setRenderRadiusMagnification(planet_radius_magnification)
         .setRenderPositionMagnification(distance_magnification/4)
@@ -271,7 +271,7 @@ namespace Application {
 
   Simulation::FlammParaboloid App::generateFlammParaboloid(std::shared_ptr<Engines::Graphics::Shader> shader){
     const float surface_size = 80;    
-    glm::mat4 surface_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    glm::mat4 surface_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0, 0.0));
     auto surface_shape = Engines::Graphics::GeometryBuilder::createSurfaceGrid()
       .setRows(static_cast<int>(surface_size))
       .setColumns(static_cast<int>(surface_size))

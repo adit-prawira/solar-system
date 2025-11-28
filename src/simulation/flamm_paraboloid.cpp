@@ -28,7 +28,7 @@ namespace Simulation {
       const float mass = celestial_body->getMass();
       const float rs = celestial_body->getRenderRadius();
       const float r_min = rs + std::max(1e-6f, 0.01f * rs); 
-      float mass_depth_scale = glm::clamp(mass / Engines::Physics::Constants::MASS_SUN_KG, 0.1f, 1.0f);
+      float mass_depth_scale = glm::clamp(mass / Engines::Physics::Constants::MASS_SUN_KG, 0.1, 1.0);
 
       for(auto &vertex : vertices){
         const float x_relative = vertex.position.x - celestial_body->getRenderPosition().x;
