@@ -135,7 +135,7 @@ namespace Simulation {
       void revolve(std::vector<std::shared_ptr<CelestialBody>> celestial_bodies, const double dt){
         auto old_acceleration = this->acceleration;
         this->acceleration = glm::dvec3(0.0, 0.0, 0.0);
-        const double min_distance = 1e3; 
+        const double min_distance = Engines::Physics::Constants::RADIUS_SUN_M; 
 
         for(auto &celestial_body : celestial_bodies){
           if(celestial_body.get() == this) continue;
