@@ -15,7 +15,7 @@ namespace Simulation{
     return *this;
   }
 
-  CelestialBodyBuilder& CelestialBodyBuilder::setHasOrbit(float has_orbit){
+  CelestialBodyBuilder& CelestialBodyBuilder::setHasOrbit(bool has_orbit){
     this->has_orbit = has_orbit;
     return *this;
   }
@@ -30,7 +30,7 @@ namespace Simulation{
     return *this;
   }
 
-  CelestialBodyBuilder& CelestialBodyBuilder::setOrbitCenter(glm::vec3 orbit_center){
+  CelestialBodyBuilder& CelestialBodyBuilder::setOrbitCenter(glm::dvec3 orbit_center){
     this->orbit_center = orbit_center;
     return *this;
   }

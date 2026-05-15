@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/ext/vector_float3.hpp"
 #include <cmath>
 #include <engines/physics/physics_body.hpp>
 #include <engines/physics/constants.hpp>
@@ -63,12 +64,12 @@ namespace Simulation {
         return *this;
       }
 
-      CelestialBody& setHasOrbit(float has_orbit){
+      CelestialBody& setHasOrbit(bool has_orbit){
         this->has_orbit = has_orbit;
         return *this;
       }
       
-      CelestialBody& setOrbitCenter(glm::vec3 orbit_center){
+      CelestialBody& setOrbitCenter(glm::dvec3 orbit_center){
         this->orbit_center = orbit_center;
         return *this;
       }
@@ -117,7 +118,7 @@ namespace Simulation {
           if(!this->radius) this->validation_messages.push_back("Radius is required for celestial body");
         });
         if(this->has_orbit && this->orbit_shader){
-          auto ring_model_matrix = glm::translate(glm::mat4(1.0f), this->orbit_center);
+          auto ring_model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(this->orbit_center));
           this->orbit = Engines::Graphics::GeometryBuilder::createRing()
           .setOuterRadius(this->getRenderPosition().x)
           .setInnerRadius(this->getRenderPosition().x - 3.0f)
@@ -275,7 +276,7 @@ namespace Simulation {
       
       std::shared_ptr<Engines::Graphics::Shader> trail_shader;
 
-      glm::vec3 orbit_center{0.0f, 0.0f, 0.0f};
+      glm::dvec3 orbit_center{0.0f, 0.0f, 0.0f};
       glm::vec3 orbit_color{0.0f, 0.0f, 0.0f};
 
       std::shared_ptr<Engines::Graphics::Shape> orbit;
