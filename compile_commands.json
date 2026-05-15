@@ -1,0 +1,409 @@
+[
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/mercury.cpp",
+   "-o",
+   "src/simulation/mercury.o"
+  ],
+  "file": "src/simulation/mercury.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/sun.cpp",
+   "-o",
+   "src/simulation/sun.o"
+  ],
+  "file": "src/simulation/sun.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/saturn.cpp",
+   "-o",
+   "src/simulation/saturn.o"
+  ],
+  "file": "src/simulation/saturn.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/pluto.cpp",
+   "-o",
+   "src/simulation/pluto.o"
+  ],
+  "file": "src/simulation/pluto.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/neptune.cpp",
+   "-o",
+   "src/simulation/neptune.o"
+  ],
+  "file": "src/simulation/neptune.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/flamm_paraboloid.cpp",
+   "-o",
+   "src/simulation/flamm_paraboloid.o"
+  ],
+  "file": "src/simulation/flamm_paraboloid.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/earth.cpp",
+   "-o",
+   "src/simulation/earth.o"
+  ],
+  "file": "src/simulation/earth.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/uranus.cpp",
+   "-o",
+   "src/simulation/uranus.o"
+  ],
+  "file": "src/simulation/uranus.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/venus.cpp",
+   "-o",
+   "src/simulation/venus.o"
+  ],
+  "file": "src/simulation/venus.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/builder/celestial_body_builder.cpp",
+   "-o",
+   "src/simulation/builder/celestial_body_builder.o"
+  ],
+  "file": "src/simulation/builder/celestial_body_builder.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/jupiter.cpp",
+   "-o",
+   "src/simulation/jupiter.o"
+  ],
+  "file": "src/simulation/jupiter.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/simulation/mars.cpp",
+   "-o",
+   "src/simulation/mars.o"
+  ],
+  "file": "src/simulation/mars.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/maths/converter.cpp",
+   "-o",
+   "src/engines/maths/converter.o"
+  ],
+  "file": "src/engines/maths/converter.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/camera.cpp",
+   "-o",
+   "src/engines/graphics/camera.o"
+  ],
+  "file": "src/engines/graphics/camera.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/geometry_builder.cpp",
+   "-o",
+   "src/engines/graphics/geometry_builder.o"
+  ],
+  "file": "src/engines/graphics/geometry_builder.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/ring.cpp",
+   "-o",
+   "src/engines/graphics/ring.o"
+  ],
+  "file": "src/engines/graphics/ring.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/shader.cpp",
+   "-o",
+   "src/engines/graphics/shader.o"
+  ],
+  "file": "src/engines/graphics/shader.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/shape.cpp",
+   "-o",
+   "src/engines/graphics/shape.o"
+  ],
+  "file": "src/engines/graphics/shape.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/sphere.cpp",
+   "-o",
+   "src/engines/graphics/sphere.o"
+  ],
+  "file": "src/engines/graphics/sphere.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/surface.cpp",
+   "-o",
+   "src/engines/graphics/surface.o"
+  ],
+  "file": "src/engines/graphics/surface.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/engines/graphics/cube.cpp",
+   "-o",
+   "src/engines/graphics/cube.o"
+  ],
+  "file": "src/engines/graphics/cube.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/app.cpp",
+   "-o",
+   "src/app.o"
+  ],
+  "file": "src/app.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "g++",
+   "-std=c++17",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "main.cpp",
+   "-o",
+   "main.o"
+  ],
+  "file": "main.cpp"
+ },
+ {
+  "directory": "/Users/adityaprawira/Documents/projects/solar-system",
+  "arguments": [
+   "gcc",
+   "-Wall",
+   "-Wextra",
+   "-Iinclude",
+   "-Iinclude/glad",
+   "-I.",
+   "-c",
+   "src/glad.c",
+   "-o",
+   "src/glad.o"
+  ],
+  "file": "src/glad.c"
+ }
+]

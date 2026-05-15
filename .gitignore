@@ -47,3 +47,9 @@ include/glm
 
 src/glad.c
 c_cpp_properties.json
+compile_commands.json
+.cache/
+
+# Agent instructions
+AGENTS.md
+.DS_Store
