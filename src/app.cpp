@@ -54,8 +54,6 @@ namespace Application {
     stars.push_back(sun);
     celestial_bodies.erase("Sun");
     
-    // celestial_bodies["Earth"]->setIsDebugMode(true);
-
     for(auto &[name, celestial_body] : celestial_bodies)
       celestial_body->setOrbitalVelocity(Simulation::CelestialBody::calculateOrbitalVelocity(name, sun, celestial_body, true));
       
