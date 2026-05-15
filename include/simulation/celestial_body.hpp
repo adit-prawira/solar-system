@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include <engines/physics/physics_body.hpp>
 #include <engines/physics/constants.hpp>
 #include <engines/graphics/geometry_builder.hpp>
@@ -10,6 +11,11 @@
 namespace Simulation {
   class CelestialBody : public Engines::Physics::PhysicsBody<CelestialBody> {
     public:
+      static constexpr double ACCELERATION_SCALE = 5e4;
+      
+      // sqrt(5e4)
+      static constexpr double VELOCITY_SCALE = 223.60679774998;
+
       ~CelestialBody(){
         if(this->trail_VBO != 0){
           glDeleteBuffers(1, &this->trail_VBO);
@@ -93,15 +99,6 @@ namespace Simulation {
         float y_pixel = Engines::Maths::Converter::meterToPixel(this->position.y, &this->render_position_magnification);
         float z_pixel = Engines::Maths::Converter::meterToPixel(this->position.z, &this->render_position_magnification);
 
-        // Apply a visual zoom factor to exaggerate movement
-        const float visual_zoom = 1000.0f; // Adjust as needed for screen size
-        // x_pixel *= visual_zoom;
-        z_pixel *= visual_zoom;
-
-        // Optional: exaggerate vertical separation for clarity
-        const float vertical_scale = 1.0f; // Keep 1.0f if you don't want to exaggerate Y
-        y_pixel *= vertical_scale;
-
         return glm::vec3(x_pixel, y_pixel, z_pixel);
       }
 
@@ -138,8 +135,7 @@ namespace Simulation {
       void revolve(std::vector<std::shared_ptr<CelestialBody>> celestial_bodies, const double dt){
         auto old_acceleration = this->acceleration;
         this->acceleration = glm::dvec3(0.0, 0.0, 0.0);
-        const double min_distance = 1e3;
-        const double k = 5e4;
+        const double min_distance = 1e3; 
 
         for(auto &celestial_body : celestial_bodies){
           if(celestial_body.get() == this) continue;
@@ -153,7 +149,7 @@ namespace Simulation {
           // unit vector determines direction r^
           const glm::dvec3 direction = glm::normalize(r);
           const double magnitude_acceleration = (Engines::Physics::Constants::GRAVITATIONAL_CONSTANT  * celestial_body->getMass())/(distance*distance);
-          this->acceleration += direction * magnitude_acceleration * k;
+          this->acceleration += direction * magnitude_acceleration * ACCELERATION_SCALE;
         }
         auto shape_matrix = this->getShape()->getModelMatrix();
         
@@ -185,7 +181,7 @@ namespace Simulation {
           glm::dvec3 tangent = glm::normalize(glm::cross(r, arbitrary));
           double distance = glm::length(r);
           double speed = sqrt((Engines::Physics::Constants::GRAVITATIONAL_CONSTANT * celestial_bodies[0]->getMass()) / distance);
-          this->velocity = tangent * speed * sqrt(k); // scale velocity to match acceleration exaggeration
+          this->velocity = tangent * speed * VELOCITY_SCALE; // scale velocity to match acceleration exaggeration
         }
         
         this->position += this->velocity*dt + 0.5 * old_acceleration * dt * dt;
@@ -247,7 +243,7 @@ namespace Simulation {
         glm::dvec3 tangent = glm::normalize(glm::cross(r, arbitrary));
         const double distance = glm::length(r);
         const double orbital_speed = std::sqrt((Engines::Physics::Constants::GRAVITATIONAL_CONSTANT * star->getMass())/distance);
-        auto orbital_velocity = tangent * orbital_speed;
+        auto orbital_velocity = tangent * orbital_speed * VELOCITY_SCALE;
 
         if(is_debug){
           std::cout << "========== " << planet_name << " ==========" << std::endl; 
