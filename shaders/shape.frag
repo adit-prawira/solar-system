@@ -10,6 +10,7 @@ uniform vec3 light_position;
 uniform vec3 view_position;
 uniform vec3 light_color;
 uniform vec3 object_color;
+uniform float alpha;
 
 void main() {
     // Ambient
@@ -29,5 +30,5 @@ void main() {
     vec3 specular = specular_strength * spec * object_color;
 
     vec3 result = (ambient + diffuse + specular) * object_color + emission;
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result, alpha);
 }

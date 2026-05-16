@@ -30,6 +30,10 @@ namespace Simulation{
     return *this;
   }
 
+  CelestialBodyBuilder& CelestialBodyBuilder::setIsShowTrail(bool is_show_trail) {
+    this->is_show_trail = is_show_trail;
+    return *this;
+  }
   CelestialBodyBuilder& CelestialBodyBuilder::setOrbitCenter(glm::dvec3 orbit_center){
     this->orbit_center = orbit_center;
     return *this;
@@ -64,7 +68,9 @@ namespace Simulation{
       .setHasOrbit(this->has_orbit)
       .setOrbitCenter(this->orbit_center)
       .setOrbitColor(this->color)
-      .setOrbitShader(shader);
+      .setOrbitShader(shader)
+      .setTrailShader(shader)
+      .setIsShowTrail(this->is_show_trail);
     
     auto model_matrix = glm::translate(glm::mat4(1.0f), celestial_body->getRenderPosition());
     auto shape = Engines::Graphics::GeometryBuilder::createSphere()

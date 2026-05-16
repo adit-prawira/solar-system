@@ -128,6 +128,7 @@ namespace Simulation {
           .setShader(this->orbit_shader)
           .build();
         }
+        this->setupTrail();
         return *this; 
       };
       
@@ -221,6 +222,7 @@ namespace Simulation {
       }
 
       void drawTrail(){
+        if(!this->is_show_trail) return;
         if(this->trails.empty()) return;
 
         this->trail_shader->setMat4("model", glm::mat4(1.0f));
@@ -233,7 +235,7 @@ namespace Simulation {
           this->trails.size() * sizeof(glm::vec3),
           this->trails.data());
 
-        glLineWidth(2.0f);
+        glLineWidth(10.0f);
         glDrawArrays(GL_LINE_STRIP, 0, this->trails.size());
       }
 
@@ -266,7 +268,7 @@ namespace Simulation {
       double render_radius_magnification = 1.0;
       double render_position_magnification = 1.0;
 
-      unsigned int trail_size = 500;
+      unsigned int trail_size = 20000;
       std::vector<glm::vec3> trails;
       bool is_show_trail = false;
       bool has_orbit = false;
@@ -281,6 +283,6 @@ namespace Simulation {
 
       std::shared_ptr<Engines::Graphics::Shape> orbit;
 
-      GLuint trail_VAO, trail_VBO;
+      GLuint trail_VAO = 0, trail_VBO = 0;
   };
 }
