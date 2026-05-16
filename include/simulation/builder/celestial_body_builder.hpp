@@ -18,7 +18,7 @@ namespace Simulation {
       
       CelestialBodyBuilder& setHasOrbit(bool has_orbit);
       CelestialBodyBuilder& setIsStar(float is_star);
-      
+      CelestialBodyBuilder& setIsShowTrail(bool is_show_trail); 
       CelestialBodyBuilder& setOrbitCenter(glm::dvec3 orbit_center);
 
       virtual std::shared_ptr<Simulation::CelestialBody> build(
@@ -26,6 +26,7 @@ namespace Simulation {
     protected:
       bool has_orbit = false;
       float is_star = false;
+      bool is_show_trail = false;
       bool is_debug_mode = false;
 
       glm::vec3 position{0.0f, 50.0f, 0.0f};

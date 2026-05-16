@@ -30,6 +30,8 @@ namespace Application {
       return;
     }
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Shader
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), this->aspectRatio(), 0.5f, 30000.0f);
@@ -69,6 +71,7 @@ namespace Application {
       shader->setMat4("projection", projection);
       shader->setVec3("light_position", this->light_position);
       shader->setVec3("light_color", glm::vec3(1.0f));
+      shader->setFloat("alpha", 1.0f);
 
       trail_shader->use();
       trail_shader->setMat4("projection", projection);
@@ -83,7 +86,11 @@ namespace Application {
       for(auto &[_, celestial_body] : celestial_bodies){
         celestial_body->revolve(stars, 1.0);
         celestial_body->getShape()->draw();
+        shader->use();
+        shader->setFloat("alpha", 0.5f);
         celestial_body->getOrbit()->draw();
+        shader->setFloat("alpha", 1.0f);
+        celestial_body->drawTrail();
       }
 
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -194,6 +201,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader), 
       Simulation::Venus()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_VENUS_M, 0.0, 0.0))
@@ -210,6 +218,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader), 
       Simulation::Mars()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_MARS_M, 0.0, 0.0))
