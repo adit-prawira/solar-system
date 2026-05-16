@@ -58,7 +58,7 @@ namespace Application {
     
     for(auto &[name, celestial_body] : celestial_bodies)
       celestial_body->setOrbitalVelocity(Simulation::CelestialBody::calculateOrbitalVelocity(name, sun, celestial_body, true));
-      
+
     auto flamm_paraboloid_surface = this->generateFlammParaboloid(shader);
 
     while (!glfwWindowShouldClose(window))
@@ -87,10 +87,11 @@ namespace Application {
         celestial_body->revolve(stars, 1.0);
         celestial_body->getShape()->draw();
         shader->use();
-        shader->setFloat("alpha", 0.5f);
+        shader->setFloat("alpha", 0.3f);
         celestial_body->getOrbit()->draw();
-        shader->setFloat("alpha", 1.0f);
+        shader->setFloat("alpha", 0.7f);
         celestial_body->drawTrail();
+        shader->setFloat("alpha", 1.0f);
       }
 
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -210,6 +211,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader),
       Simulation::Earth()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_EARTH_M, 0.0, 0.0))
@@ -227,6 +229,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader), 
       Simulation::Jupiter()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_JUPITER_M, 0.0, 0.0))
@@ -235,6 +238,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification/2)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader),
       Simulation::Saturn()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_SATURN_M, 0.0, 0.0))
@@ -243,6 +247,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification/2)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader), 
       Simulation::Uranus()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_URANUS_M, 0.0, 0.0))
@@ -251,6 +256,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification/3)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader), 
       Simulation::Neptune()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_NEPTUNE_M, 0.0, 0.0))
@@ -259,6 +265,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification/4)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader),
       Simulation::Pluto()
         .setPosition(sun->getPosition() + glm::dvec3(Engines::Physics::Constants::DISTANCE_SUN_PLUTO_M, 0.0, 0.0))
@@ -267,6 +274,7 @@ namespace Application {
         .setRenderPositionMagnification(distance_magnification/4)
         .setHasOrbit(true)
         .setOrbitCenter(orbit_center)
+        .setIsShowTrail(true)
         .build(shader)
     };
     celestial_bodies.push_back(sun);
