@@ -223,20 +223,41 @@ namespace Simulation {
 
       void drawTrail(){
         if(!this->is_show_trail) return;
-        if(this->trails.empty()) return;
+        if(this->trails.size() < 2) return;
 
         this->trail_shader->setMat4("model", glm::mat4(1.0f));
         this->trail_shader->setVec3("line_color", this->getShape()->getColor());
+        
+        const float thickness = this->getRenderRadius()/2.0f;
+        std::vector<glm::vec3> ribbon;
+        ribbon.reserve(this->trails.size() * 2);
+    
+        for(size_t i = 0; i < this->trails.size(); ++i) {
+          glm::vec3 direction;
+          if(i==0)
+            direction = glm::normalize(this->trails[i+1] - this->trails[i]);
+          else if (i == this->trails.size() - 1)
+            direction = glm::normalize(this->trails[i] - this->trails[i-1]);
+          else 
+            direction = glm::normalize(this->trails[i+1] - this->trails[i-1]);
 
+          glm::vec3 up = (fabs(direction.y) < 0.99f) ? glm::vec3(0,1,0) : glm::vec3(1,0,0);
+          glm::vec3 right = glm::normalize(glm::cross(direction, up));
+          glm::vec3 offset = right * thickness;
+          ribbon.push_back(this->trails[i] - offset);
+          ribbon.push_back(this->trails[i] + offset);
+        }
+          
         glBindVertexArray(this->trail_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, this->trail_VBO);
 
-        glBufferSubData(GL_ARRAY_BUFFER, 0,
-          this->trails.size() * sizeof(glm::vec3),
-          this->trails.data());
-
-        glLineWidth(10.0f);
-        glDrawArrays(GL_LINE_STRIP, 0, this->trails.size());
+        glBufferData(GL_ARRAY_BUFFER,
+          ribbon.size() * sizeof(glm::vec3),
+          ribbon.data(),
+          GL_DYNAMIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+        glEnableVertexAttribArray(0);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, ribbon.size());
       }
 
       static glm::dvec3 calculateOrbitalVelocity(std::string planet_name, std::shared_ptr<CelestialBody> star, std::shared_ptr<CelestialBody>  planet, bool is_debug = false){
@@ -268,7 +289,7 @@ namespace Simulation {
       double render_radius_magnification = 1.0;
       double render_position_magnification = 1.0;
 
-      unsigned int trail_size = 20000;
+      unsigned int trail_size = 50000;
       std::vector<glm::vec3> trails;
       bool is_show_trail = false;
       bool has_orbit = false;
