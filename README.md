@@ -41,4 +41,5 @@ compiledb make                      # parses Makefile, writes compile_commands.j
 Re-run `compiledb make` whenever the Makefile or source files change significantly. The generated `compile_commands.json` should not be tracked in git — it is listed in `.gitignore`.
 
 ## Snapshots
-<img width="1914" height="1076" alt="Screenshot 2026-05-15 at 7 43 13 pm" src="https://github.com/user-attachments/assets/5742115b-5a6b-4fbc-bd7b-ef74bd4fa396" />
+<img width="1919" height="1076" alt="Screenshot 2026-05-16 at 2 58 05 pm" src="https://github.com/user-attachments/assets/33cc030a-6884-4f88-bdf0-140f3c34d1bf" />
+
