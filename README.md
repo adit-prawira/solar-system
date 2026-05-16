@@ -55,5 +55,5 @@ Re-run `compiledb make` whenever the Makefile or source files change significant
 | Escape | Quit |
 
 ## Snapshots
-<img width="1919" height="1076" alt="Screenshot 2026-05-16 at 2 58 05 pm" src="https://github.com/user-attachments/assets/33cc030a-6884-4f88-bdf0-140f3c34d1bf" />
+<img width="1919" height="1078" alt="Screenshot 2026-05-16 at 5 15 45 pm" src="https://github.com/user-attachments/assets/06dc94f3-57ca-40c6-8f45-7a9a4ea6647e" />
 
